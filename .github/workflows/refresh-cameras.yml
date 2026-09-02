@@ -1,0 +1,32 @@
+name: Refresh camera dataset
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run ingest
+        env:
+          NOMINATIM_USER_AGENT: cctv-jakarta-map/0.1 (contact: ${{ vars.NOMINATIM_CONTACT_EMAIL }})
+      - run: npm run validate-data
+      - run: npm run validate-streams
+      - name: Commit refreshed data
+        run: |
+          git config user.name "cctv-jakarta-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/cameras.json data/unresolved-locations.json
+          git diff --cached --quiet || git commit -m "chore(data): refresh CCTV directory"
+          git push
