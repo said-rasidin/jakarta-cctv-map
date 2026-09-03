@@ -1,24 +1,24 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect */
 
-import { Bot, Pause, Play, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { COCO_LABELS, isModelCatalog, type Detection, type ModelCatalog } from "@/lib/ai";
+import { createPortal } from "react-dom";
+import { DetectionCanvas } from "@/features/detection/components/detection-canvas";
+import { DetectionControls, type DetectionState } from "@/features/detection/components/detection-controls";
+import { isModelCatalog, type ModelCatalog, type ModelPrecision, type ModelVariant } from "@/features/detection/model-catalog";
+import { COCO_LABELS, type Detection } from "@/features/detection/postprocess";
 
-type AiState = "off" | "checking" | "downloading" | "warming" | "running" | "paused" | "error";
-const COLORS: Record<number, string> = { 0: "#38bdf8", 1: "#a78bfa", 2: "#34d399", 3: "#fbbf24", 5: "#fb7185", 7: "#f97316" };
-
-export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideoElement | null; eligible: boolean; generationKey: string }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export function DetectionOverlay({ video, eligible, generationKey, controlsTarget }: { video: HTMLVideoElement | null; eligible: boolean; generationKey: string; controlsTarget: HTMLElement | null }) {
   const workerRef = useRef<Worker | null>(null);
   const busyRef = useRef(false);
   const readyRef = useRef(false);
   const generationRef = useRef(0);
   const lastSampleRef = useRef(0);
-  const intervalRef = useRef(1000);
+  const intervalRef = useRef(200);
   const callbackRef = useRef<number | null>(null);
   const [enabled, setEnabled] = useState(false);
-  const [state, setState] = useState<AiState>("off");
+  const [state, setState] = useState<DetectionState>("off");
   const [status, setStatus] = useState("AI tidak aktif");
   const [provider, setProvider] = useState("");
   const [progress, setProgress] = useState(0);
@@ -27,9 +27,10 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
   const [lastResultAt, setLastResultAt] = useState(0);
   const [latency, setLatency] = useState(0);
   const [catalog, setCatalog] = useState<ModelCatalog | null>(null);
-  const [selectedModel, setSelectedModel] = useState("");
+  const [selectedVariant, setSelectedVariant] = useState<ModelVariant>("nano");
+  const [selectedPrecision, setSelectedPrecision] = useState<ModelPrecision>("fp16");
 
-  const selectedManifest = catalog?.models.find((model) => model.id === selectedModel)?.manifest;
+  const selectedManifest = catalog?.models.find(({ manifest }) => manifest.variant === selectedVariant && manifest.precision === selectedPrecision)?.manifest;
 
   const clear = useCallback(() => { setDetections([]); setLastResultAt(0); }, []);
 
@@ -38,6 +39,8 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
     setEnabled(false);
     setState("off");
     setStatus("AI tidak aktif");
+    lastSampleRef.current = Number.NEGATIVE_INFINITY;
+    intervalRef.current = 200;
     clear();
   }, [generationKey, clear]);
 
@@ -50,8 +53,9 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
         if (!isModelCatalog(value)) throw new Error("Katalog model AI tidak valid");
         if (cancelled) return;
         setCatalog(value);
-        const preferred = value.models.find((model) => model.manifest.variant === "nano" && model.manifest.precision === "fp16");
-        setSelectedModel(preferred?.id ?? value.defaultModel);
+        const selected = value.models.find((model) => model.id === value.defaultModel) ?? value.models[0];
+        setSelectedVariant(selected.manifest.variant);
+        setSelectedPrecision(selected.manifest.precision);
       })
       .catch((error) => {
         if (!cancelled) setStatus(error instanceof Error ? error.message : "Katalog model gagal dimuat");
@@ -60,52 +64,12 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
   }, []);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const draw = () => {
-      const rect = canvas.getBoundingClientRect();
-      const ratio = window.devicePixelRatio || 1;
-      canvas.width = Math.max(1, Math.round(rect.width * ratio));
-      canvas.height = Math.max(1, Math.round(rect.height * ratio));
-      const context = canvas.getContext("2d");
-      if (!context) return;
-      context.scale(ratio, ratio);
-      context.clearRect(0, 0, rect.width, rect.height);
-      const scale = Math.min(rect.width / sourceSize.width, rect.height / sourceSize.height);
-      const offsetX = (rect.width - sourceSize.width * scale) / 2;
-      const offsetY = (rect.height - sourceSize.height * scale) / 2;
-      const staleAlpha = lastResultAt && Date.now() - lastResultAt > 2500 ? 0.3 : 1;
-      context.globalAlpha = staleAlpha;
-      context.font = "600 12px Arial";
-      context.lineWidth = 2;
-      for (const box of detections) {
-        const color = COLORS[box.classId] ?? "#e2e8f0";
-        const x = offsetX + box.x1 * scale;
-        const y = offsetY + box.y1 * scale;
-        const width = (box.x2 - box.x1) * scale;
-        const height = (box.y2 - box.y1) * scale;
-        const label = `${COCO_LABELS[box.classId] ?? box.classId} ${Math.round(box.confidence * 100)}%`;
-        const labelWidth = context.measureText(label).width + 10;
-        context.strokeStyle = color;
-        context.strokeRect(x, y, width, height);
-        context.fillStyle = color;
-        context.fillRect(x, Math.max(0, y - 20), labelWidth, 20);
-        context.fillStyle = "#07111f";
-        context.fillText(label, x + 5, Math.max(14, y - 6));
-      }
-    };
-    draw();
-    const observer = new ResizeObserver(draw);
-    observer.observe(canvas);
-    const timer = window.setInterval(draw, 1000);
-    return () => { observer.disconnect(); window.clearInterval(timer); };
-  }, [detections, lastResultAt, sourceSize]);
-
-  useEffect(() => {
     if (!enabled || !eligible || !video || !selectedManifest) return;
     let cancelled = false;
     const manifest = selectedManifest;
     const generation = ++generationRef.current;
+    lastSampleRef.current = Number.NEGATIVE_INFINITY;
+    intervalRef.current = 200;
     setState("checking");
     setStatus("Memeriksa model AI…");
     const worker = new Worker(new URL("../workers/inference.worker.ts", import.meta.url), { type: "module" });
@@ -127,7 +91,9 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
         busyRef.current = false;
         const resultLatency = Number(event.data.latencyMs);
         setLatency(resultLatency);
-        intervalRef.current = Math.max(334, Math.min(2000, resultLatency * 2));
+        // busyRef prevents overlapping work; a short interval means the next inference uses
+        // the newest decoded frame immediately instead of waiting behind stale frames.
+        intervalRef.current = Math.max(100, Math.min(500, resultLatency * 0.25));
         setSourceSize({ width: Number(event.data.sourceWidth), height: Number(event.data.sourceHeight) });
         setDetections(event.data.detections as Detection[]);
         setLastResultAt(Date.now());
@@ -179,26 +145,25 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
 
   const counts = detections.reduce<Record<string, number>>((result, detection) => { const label = COCO_LABELS[detection.classId] ?? String(detection.classId); result[label] = (result[label] ?? 0) + 1; return result; }, {});
   const toggle = () => { if (enabled) { setEnabled(false); setState("off"); setStatus("AI tidak aktif"); } else { setEnabled(true); } };
+  const selectVariant = (variant: ModelVariant) => {
+    setSelectedVariant(variant);
+    if (!catalog?.models.some(({ manifest }) => manifest.variant === variant && manifest.precision === selectedPrecision)) {
+      const fallback = catalog?.models.find(({ manifest }) => manifest.variant === variant);
+      if (fallback) setSelectedPrecision(fallback.manifest.precision);
+    }
+  };
 
   return <>
-    <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
-    <div className="absolute top-2 left-2 right-2 flex flex-wrap items-start justify-between gap-2">
-      <div className="rounded-lg bg-slate-950/85 px-2.5 py-2 text-[11px] text-slate-200 backdrop-blur">
-        <p className="flex items-center gap-1.5 font-semibold"><Bot size={13} /> {status}</p>
-        {state === "downloading" && <div className="mt-1 h-1.5 w-36 overflow-hidden rounded-full bg-slate-700"><div className="h-full bg-sky-400" style={{ width: `${progress}%` }} /></div>}
-        {state === "running" && <p className="mt-1 text-slate-400">{provider} · {latency ? `${Math.round(latency)} ms` : "pemanasan"} · {Object.entries(counts).map(([label, count]) => `${label} ${count}`).join(" · ") || "belum ada objek"}</p>}
-      </div>
-      <div className="flex items-center gap-2 rounded-lg bg-slate-950/90 p-1.5 backdrop-blur">
-        <label className="sr-only" htmlFor={`ai-model-${generationKey}`}>Pilih model AI</label>
-        <select id={`ai-model-${generationKey}`} value={selectedModel} onChange={(event) => setSelectedModel(event.target.value)} disabled={enabled || !catalog} className="max-w-40 rounded-md border border-slate-700 bg-slate-900 px-2 py-1.5 text-xs text-slate-100 disabled:cursor-not-allowed disabled:opacity-60" title={enabled ? "Matikan AI untuk mengganti model" : "Pilih model AI"}>
-          {!catalog && <option value="">Memuat model…</option>}
-          {catalog?.models.map(({ id, manifest }) => <option key={id} value={id}>{manifest.variant[0].toUpperCase() + manifest.variant.slice(1)} · {manifest.precision.toUpperCase()}</option>)}
-        </select>
-        <button type="button" onClick={toggle} disabled={!eligible || !video || !selectedManifest} className="inline-flex items-center gap-1.5 rounded-md border border-sky-400/50 px-2.5 py-1.5 text-xs font-semibold text-sky-200 disabled:cursor-not-allowed disabled:border-slate-700 disabled:text-slate-500">
-          {enabled ? <Pause size={13} /> : <Play size={13} />} {enabled ? "Matikan AI" : "Coba AI"}
-        </button>
-      </div>
-    </div>
-    {enabled && <p className="absolute bottom-12 left-2 inline-flex items-center gap-1 rounded bg-slate-950/80 px-2 py-1 text-[10px] text-emerald-200"><ShieldCheck size={11} /> Frame diproses lokal, tidak diunggah · Eksperimental</p>}
+    <DetectionCanvas detections={detections} sourceSize={sourceSize} lastResultAt={lastResultAt} />
+    {controlsTarget && createPortal(<>
+      <DetectionControls
+        generationKey={generationKey} state={state} status={status} progress={progress}
+        provider={provider} latency={latency} counts={counts} catalog={catalog}
+        selectedVariant={selectedVariant} selectedPrecision={selectedPrecision}
+        enabled={enabled} canEnable={Boolean(eligible && video && selectedManifest)}
+        onVariantChange={selectVariant} onPrecisionChange={setSelectedPrecision} onToggle={toggle}
+      />
+      {enabled && <p className="mt-1.5 inline-flex items-center gap-1 text-[10px] text-emerald-300"><ShieldCheck size={11} /> Frame diproses lokal, tidak diunggah · Eksperimental</p>}
+    </>, controlsTarget)}
   </>;
 }

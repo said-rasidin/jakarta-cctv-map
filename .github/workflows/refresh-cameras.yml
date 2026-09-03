@@ -25,6 +25,6 @@ jobs:
         run: |
           git config user.name "cctv-jakarta-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/cameras.json data/unresolved-locations.json
+          git add data/generated/cameras.json data/review/unresolved-locations.json
           git diff --cached --quiet || git commit -m "chore(data): refresh CCTV directory"
           git push

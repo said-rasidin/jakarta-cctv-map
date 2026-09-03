@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { cameraGroup, distanceInKm, filterSites, normalizeText, withinJakarta } from "./camera";
-import type { CameraSite } from "./types";
+import type { CameraSite } from "@/domain/cameras/types";
 
 const site: CameraSite = {
   id: "501844", name: "Jl. MH. Thamrin C01", normalizedName: "jl mh thamrin c01", district: "Menteng", areaCode: "JKP", agency: "Dishub", provider: "Bali Tower", address: null, catalogSource: "jakarta-public",

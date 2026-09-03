@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import type { CameraDataset } from "../src/lib/types";
+import type { CameraDataset } from "../../src/domain/cameras/types";
 
-const DATASET_PATH = resolve("data/cameras.json");
+const DATASET_PATH = resolve("data/generated/cameras.json");
 const ALLOWED_HOSTS = new Set(["dki-jkt.balitower.co.id", "cctv-jsc.balitower.co.id"]);
 const CONCURRENCY = 4;
 const TIMEOUT_MS = 15_000;

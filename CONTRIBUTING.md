@@ -30,9 +30,9 @@ Thank you for helping improve Jakarta CCTV Map. Contributions can include camera
 
 Generated files should not be edited by hand. If a camera is displayed at the wrong location:
 
-1. Find its site ID in `data/cameras.json` or the application.
+1. Find its site ID in `data/generated/cameras.json` or the application.
 2. Verify the coordinates using a reliable source.
-3. Add or update the site in `data/overrides.json`:
+3. Add or update the site in `data/manual/overrides.json`:
 
    ```json
    {
@@ -45,7 +45,7 @@ Generated files should not be edited by hand. If a camera is displayed at the wr
    ```
 
 4. Run `npm run ingest` and `npm run validate-data`.
-5. Include the regenerated `data/cameras.json` and `data/unresolved-locations.json` files in the pull request.
+5. Include the regenerated `data/generated/cameras.json` and `data/review/unresolved-locations.json` files in the pull request.
 
 For a removed, renamed, or unavailable upstream camera, include the source URL and evidence in an issue. Do not work around upstream access controls or add private camera feeds.
 

@@ -1,4 +1,6 @@
-import type { CameraSite } from "@/lib/types";
+import type { CameraSite, StreamHealth } from "@/domain/cameras/types";
+
+export type CameraStatus = "active" | "inactive" | "checking";
 
 export const JAKARTA_CENTER: [number, number] = [-6.2088, 106.8456];
 export const JAKARTA_BOUNDS = { minLat: -6.4, maxLat: -6.05, minLng: 106.65, maxLng: 107.05 };
@@ -41,4 +43,17 @@ export function cameraGroup(site: Pick<CameraSite, "name" | "address">) {
   const rawLabel = roadAddress && /^(?:jl\.?|jalan|simpang|flyover|jpo|tol)\b/i.test(roadAddress) ? roadAddress : site.name;
   const label = rawLabel.replace(GROUP_PREFIXES, "").replace(CAMERA_SUFFIX, "").replace(/\s+/g, " ").trim() || site.name;
   return { key: normalizeText(label), label };
+}
+
+export function locationLabel(site: Pick<CameraSite, "district">) {
+  const value = site.district?.trim() || "DKI Jakarta";
+  return value.toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+export function cameraStatus(site: CameraSite, health: Record<string, StreamHealth>): CameraStatus {
+  const direct = site.channels.filter((channel) => channel.embedUrl);
+  if (!direct.length) return "inactive";
+  const statuses = direct.map((channel) => health[channel.id] ?? "unknown");
+  if (statuses.includes("available")) return "active";
+  return statuses.every((status) => status === "unavailable") ? "inactive" : "checking";
 }

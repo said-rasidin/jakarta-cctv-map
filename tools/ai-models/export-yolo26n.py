@@ -10,14 +10,13 @@ from pathlib import Path
 import onnx
 from ultralytics import YOLO
 
-INPUT_SIZE = 416
 OUTPUT_DIR = Path("public/models/yolo26n")
 VARIANTS = {"nano": "n", "small": "s", "medium": "m"}
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--variant", choices=(*VARIANTS, "all"), default=os.getenv("AI_MODEL_VARIANT", "all"))
-parser.add_argument("--precision", choices=("fp32", "fp16"), default=os.getenv("AI_MODEL_PRECISION", "fp16"))
-parser.add_argument("--imgsz", type=int, default=int(os.getenv("AI_MODEL_IMAGE_SIZE", INPUT_SIZE)))
+parser.add_argument("--precision", choices=("fp32", "fp16", "int8", "all"), default=os.getenv("AI_MODEL_PRECISION", "all"))
+parser.add_argument("--imgsz", type=int, default=int(os.getenv("AI_MODEL_IMAGE_SIZE", 320)))
 args = parser.parse_args()
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -54,12 +53,15 @@ def topologically_sort_graph(graph, outer_scope=frozenset()) -> None:
                     topologically_sort_graph(child_graph, frozenset(available))
 
 
-def export_variant(variant: str) -> dict:
+def export_variant(variant: str, precision: str) -> dict:
     checkpoint = f"yolo26{VARIANTS[variant]}.pt"
     model = YOLO(checkpoint)
     export_options = {"format": "onnx", "imgsz": args.imgsz, "batch": 1, "dynamic": False, "simplify": True}
-    if args.precision == "fp16":
+    if precision == "fp16":
         export_options["quantize"] = 16
+    elif precision == "int8":
+        # Small built-in calibration set keeps the experimental Docker build self-contained.
+        export_options.update({"quantize": 8, "data": "coco8.yaml", "fraction": 1.0})
     exported = Path(model.export(**export_options))
     graph = onnx.load(exported)
     topologically_sort_graph(graph.graph)
@@ -68,7 +70,7 @@ def export_variant(variant: str) -> dict:
 
     contents = exported.read_bytes()
     digest = hashlib.sha256(contents).hexdigest()
-    output_file = OUTPUT_DIR / f"yolo26{VARIANTS[variant]}-e2e-{args.imgsz}-{args.precision}.{digest[:12]}.onnx"
+    output_file = OUTPUT_DIR / f"yolo26{VARIANTS[variant]}-e2e-{args.imgsz}-{precision}.{digest[:12]}.onnx"
     shutil.copy2(exported, output_file)
 
     input_name = graph.graph.input[0].name
@@ -84,9 +86,9 @@ def export_variant(variant: str) -> dict:
         "sha256": digest,
         "input": {"name": input_name, "width": args.imgsz, "height": args.imgsz},
         "output": {"name": output_name, "schema": "xyxy-confidence-class"},
-        "modelName": f"YOLO26{VARIANTS[variant]} COCO {args.imgsz} {args.precision.upper()}",
+        "modelName": f"YOLO26{VARIANTS[variant]} COCO {args.imgsz} {precision.upper()}",
         "variant": variant,
-        "precision": args.precision,
+        "precision": precision,
         "license": "Ultralytics AGPL-3.0 or Enterprise",
     }
     print(f"Installed {output_file} ({len(contents) / 1024 / 1024:.1f} MB)")
@@ -94,8 +96,14 @@ def export_variant(variant: str) -> dict:
 
 
 variants = list(VARIANTS) if args.variant == "all" else [args.variant]
-models = [{"id": f"{variant}-{args.precision}", "manifest": export_variant(variant)} for variant in variants]
-default_id = f"nano-{args.precision}" if args.variant == "all" else models[0]["id"]
+precisions = ["fp16", "int8"] if args.precision == "all" else [args.precision]
+models = [
+    {"id": f"{variant}-{precision}", "manifest": export_variant(variant, precision)}
+    for variant in variants
+    for precision in precisions
+]
+preferred_id = "nano-fp16"
+default_id = preferred_id if any(item["id"] == preferred_id for item in models) else models[0]["id"]
 catalog = {"version": 1, "defaultModel": default_id, "models": models}
 (OUTPUT_DIR / "catalog.json").write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
 (OUTPUT_DIR / "manifest.json").write_text(json.dumps(next(item["manifest"] for item in models if item["id"] == default_id), indent=2) + "\n", encoding="utf-8")

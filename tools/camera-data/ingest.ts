@@ -1,13 +1,13 @@
 import * as cheerio from "cheerio";
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { normalizeText, withinJakarta } from "../src/lib/camera";
-import type { CameraDataset, CameraSite } from "../src/lib/types";
+import { normalizeText, withinJakarta } from "../../src/domain/cameras/camera";
+import type { CameraDataset, CameraSite } from "../../src/domain/cameras/types";
 
 const SOURCE_URL = "https://jakcctv.jakarta.go.id/publik";
-const OUTPUT = resolve("data/cameras.json");
-const OVERRIDES = resolve("data/overrides.json");
-const REVIEW = resolve("data/unresolved-locations.json");
+const OUTPUT = resolve("data/generated/cameras.json");
+const OVERRIDES = resolve("data/manual/overrides.json");
+const REVIEW = resolve("data/review/unresolved-locations.json");
 const MIN_EXPECTED_CHANNELS = 20;
 type Override = { lat: number; lng: number; district?: string };
 type RawChannel = { siteId: string; siteName: string; agency: string; areaCode: string | null; label: string; embedUrl: string };

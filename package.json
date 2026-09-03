@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "node scripts/copy-ort-assets.mjs",
+    "postinstall": "node tools/build/copy-ort-assets.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ingest": "tsx scripts/ingest.ts",
-    "validate-data": "tsx scripts/validate-data.ts",
-    "validate-streams": "tsx scripts/validate-streams.ts"
+    "ingest": "tsx tools/camera-data/ingest.ts",
+    "validate-data": "tsx tools/camera-data/validate-data.ts",
+    "validate-streams": "tsx tools/camera-data/validate-streams.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",

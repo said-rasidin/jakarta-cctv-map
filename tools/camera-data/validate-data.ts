@@ -1,6 +1,6 @@
-import dataset from "../data/cameras.json";
-import { withinJakarta } from "../src/lib/camera";
-import type { CameraDataset } from "../src/lib/types";
+import dataset from "../../data/generated/cameras.json";
+import { withinJakarta } from "../../src/domain/cameras/camera";
+import type { CameraDataset } from "../../src/domain/cameras/types";
 
 const value = dataset as CameraDataset;
 if (value.schemaVersion !== 2 || !value.sites.length) throw new Error("Camera dataset is empty or uses an unsupported schema.");

@@ -1,7 +1,8 @@
 /// <reference lib="webworker" />
 
 import type { InferenceSession, Tensor } from "onnxruntime-web";
-import { mapModelBoxToSource, parseYoloOutput, type ModelManifest } from "../lib/ai";
+import type { ModelManifest } from "../model-catalog";
+import { mapModelBoxToSource, parseYoloOutput } from "../postprocess";
 
 type OrtModule = typeof import("onnxruntime-web");
 type InitMessage = { type: "init"; manifest: ModelManifest };
@@ -62,7 +63,7 @@ async function createSession(modelManifest: ModelManifest) {
   ort.env.wasm.numThreads = 1;
   ort.env.wasm.wasmPaths = "/ort/";
   session = await ort.InferenceSession.create(model, { executionProviders: ["wasm"] });
-  provider = modelManifest.precision === "fp16" ? "CPU/WASM · FP16 lambat" : "CPU/WASM";
+  provider = modelManifest.precision === "fp16" ? "CPU/WASM · FP16 lambat" : `CPU/WASM · ${modelManifest.precision.toUpperCase()}`;
 }
 
 function float16ToFloat32(value: number) {

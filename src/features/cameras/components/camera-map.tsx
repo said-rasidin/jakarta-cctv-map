@@ -5,8 +5,8 @@ import Supercluster from "supercluster";
 import { useEffect, useMemo, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import { Layers, Maximize2, Video } from "lucide-react";
-import { cameraGroup, JAKARTA_CENTER } from "@/lib/camera";
-import type { CameraSite, StreamHealth } from "@/lib/types";
+import { cameraGroup, JAKARTA_CENTER } from "@/domain/cameras/camera";
+import type { CameraSite, StreamHealth } from "@/domain/cameras/types";
 
 type Point = GeoJSON.Feature<GeoJSON.Point, { site: CameraSite }>;
 type ClusterProperties = { cluster: true; cluster_id: number; point_count: number; point_count_abbreviated: string };
@@ -48,7 +48,7 @@ function CameraPin({ site, position, label, status, onSelect, onPreview }: { sit
   </Marker>;
 }
 
-export function JakartaMap({ sites, selected, onSelect, onPreview, userLocation, streamHealth }: { sites: CameraSite[]; selected: CameraSite | null; onSelect: (site: CameraSite) => void; onPreview: (site: CameraSite) => void; userLocation: { lat: number; lng: number } | null; streamHealth: Record<string, StreamHealth> }) {
+export function CameraMap({ sites, selected, onSelect, onPreview, userLocation, streamHealth }: { sites: CameraSite[]; selected: CameraSite | null; onSelect: (site: CameraSite) => void; onPreview: (site: CameraSite) => void; userLocation: { lat: number; lng: number } | null; streamHealth: Record<string, StreamHealth> }) {
   const [viewport, setViewport] = useState<[number, number, number, number]>([106.65, -6.4, 107.05, -6.05]);
   const [zoom, setZoom] = useState(12);
   const [layout, setLayout] = useState<MapLayout>(() => (typeof window !== "undefined" && window.localStorage.getItem("map-layout") === "dark" ? "dark" : "light"));

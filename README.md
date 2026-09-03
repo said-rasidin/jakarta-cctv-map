@@ -23,16 +23,16 @@ The application turns Jakarta's official public CCTV directory into a searchable
 
 Camera metadata and stream links are collected only from the official [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) directory. The ingestion script extracts camera IDs, location names, agencies, and public iframe URLs from that page.
 
-The official directory does not include map coordinates. Coordinates in this repository are manually extracted, reviewed, and maintained in [`data/overrides.json`](data/overrides.json); they are not fetched from a third-party camera catalogue.
+The official directory does not include map coordinates. Coordinates in this repository are manually extracted, reviewed, and maintained in [`data/manual/overrides.json`](data/manual/overrides.json); they are not fetched from a third-party camera catalogue.
 
 Coordinates are resolved in this order:
 
-1. A manually extracted and reviewed entry in [`data/overrides.json`](data/overrides.json)
+1. A manually extracted and reviewed entry in [`data/manual/overrides.json`](data/manual/overrides.json)
 2. A manually maintained coordinate from the last successfully generated dataset
 
-Newly listed sites without a manual coordinate are placed in [`data/unresolved-locations.json`](data/unresolved-locations.json) and are not published on the map until reviewed.
+Newly listed sites without a manual coordinate are placed in [`data/review/unresolved-locations.json`](data/review/unresolved-locations.json) and are not published on the map until reviewed.
 
-Generated camera data is committed to [`data/cameras.json`](data/cameras.json), while locations that still need manual review are written to [`data/unresolved-locations.json`](data/unresolved-locations.json). The map tiles use OpenStreetMap data rendered by [CARTO](https://carto.com/attributions).
+Generated camera data is committed to [`data/generated/cameras.json`](data/generated/cameras.json), while locations that still need manual review are written to [`data/review/unresolved-locations.json`](data/review/unresolved-locations.json). The map tiles use OpenStreetMap data rendered by [CARTO](https://carto.com/attributions).
 
 This project is an independent interface for publicly available data. Camera ownership, stream availability, and upstream data accuracy remain under the control of their respective providers. Review the upstream providers' terms before redistributing their data.
 
@@ -42,19 +42,42 @@ This project is an independent interface for publicly available data. Camera own
 flowchart LR
     A[Jakarta Public CCTV] --> D[Ingestion pipeline]
     C[Manual coordinates] --> D
-    D --> E[data/cameras.json]
+    D --> E[data/generated/cameras.json]
     E --> F[Next.js application]
     F --> G[React Leaflet map]
     F --> H[Stream health API]
     G --> I[Search, filters, nearby cameras, preview]
 ```
 
-- **Data pipeline:** `scripts/ingest.ts` fetches and normalizes the official public directory, groups multiple channels at the same site, applies manually maintained coordinates, and writes a versioned JSON dataset.
+- **Data pipeline:** `tools/camera-data/ingest.ts` fetches and normalizes the official public directory, groups multiple channels at the same site, applies manually maintained coordinates, and writes a versioned JSON dataset.
 - **Application:** Next.js loads the generated dataset at build time. The interactive React UI performs searching, filtering, distance sorting, and map interaction in the browser.
 - **Map:** React Leaflet renders CARTO map tiles, while Supercluster groups dense camera markers for responsive navigation.
 - **Streams:** Direct Bali Tower streams are loaded only when requested. A server-side API route checks approved stream hosts before the viewer reports availability.
 - **AI experiment:** A direct HLS player samples at most one frame at a time and runs YOLO26n in a browser worker. Frames are not uploaded, recorded, or retained. WebGPU is preferred with a single-thread WASM fallback.
 - **Automation:** GitHub Actions validates every change and refreshes the camera dataset daily. The refresh job keeps the last good dataset if an upstream source returns suspiciously little data.
+
+## Project structure
+
+The repository is a feature-oriented Next.js application. Runtime boundaries are explicit without requiring separate frontend, backend, and AI deployments:
+
+```text
+src/
+  app/                 Next.js pages and thin API route adapters
+  domain/cameras/      Shared camera contracts, validation, and pure logic
+  features/cameras/    Camera explorer, map, viewer, hooks, and server checks
+  features/detection/  Browser-side model catalog, post-processing, UI, and worker
+  features/video/      Direct video playback
+tools/
+  camera-data/         Dataset ingestion and validation
+  ai-models/           Build-time ONNX model export
+  build/               Static runtime asset preparation
+data/
+  generated/           Generated camera dataset
+  manual/              Human-reviewed source overrides
+  review/              Unresolved records requiring review
+```
+
+The AI path remains client-side: the detection feature sends frames only to its local browser worker. The Python model exporter under `tools/ai-models` runs during model preparation and is not a production service.
 
 ## Run locally
 
@@ -81,12 +104,12 @@ The separately licensed model is not committed or downloaded during a normal app
 ```powershell
 Copy-Item .env.example .env.local
 # Set NEXT_PUBLIC_ENABLE_CCTV_AI=true in .env.local
-py -m pip install -r requirements-ai.txt
-py scripts/export-yolo26n.py
+py -m pip install -r tools/ai-models/requirements.txt
+py tools/ai-models/export-yolo26n.py
 npm run dev
 ```
 
-The exporter creates content-hashed 416×416 ONNX assets plus a validated model catalog under `public/models/yolo26n`. By default it prepares FP16 nano, small, and medium models. The camera viewer lets the user choose one and downloads only that model on the first **Coba AI** click. AI stops and its worker/session are released when disabled, hidden, switched, or closed. Review Ultralytics licensing and the camera operator's terms before deployment.
+The exporter creates content-hashed 320×320 ONNX assets plus a validated model catalog under `public/models/yolo26n`. By default it prepares FP16 and INT8 versions of nano, small, and medium. The camera viewer has separate model-size and precision controls and downloads only the selected model on the first **Coba AI** click. AI stops and its worker/session are released when disabled, hidden, switched, or closed. Review Ultralytics licensing and the camera operator's terms before deployment.
 
 ## How AI works
 
@@ -106,40 +129,42 @@ flowchart LR
     J[Viewer closed, paused, hidden, or switched] --> K[Cancel sampling and release worker]
 ```
 
-Only one frame can be in inference at a time. The sampler starts at roughly 1 frame/second and adapts between 0.5 and 3 FPS, prioritizing smooth video playback. The initial COCO labels shown are person, bicycle, car, motorcycle, bus, and truck. Results are ephemeral and experimental.
+![Client-side object detection running on a Jakarta CCTV stream](docs/object-detection.png)
+
+Only one frame can be in inference at a time. As soon as it finishes, the worker samples the newest decoded frame instead of queueing old frames. It runs at up to roughly 10 FPS when the device is fast enough, while the one-job limit protects memory. The viewer shows measured inference latency and estimated FPS. The initial COCO labels shown are person, bicycle, car, motorcycle, bus, and truck. Results are ephemeral and experimental.
 
 ### Choose a YOLO26 experiment
 
-Compose packages all three selectable model sizes at one precision. The UI defaults to Nano FP16. Set these environment variables before `docker compose up --build`; use `--build` whenever the packaged selection changes.
+Compose packages all three selectable model sizes in FP16 and INT8. The UI defaults to Nano FP16. Set these environment variables before `docker compose up --build`; use `--build` whenever the packaged selection changes.
 
 | Setting | Values | Default | Notes |
 | --- | --- | --- | --- |
 | `AI_MODEL_VARIANT` | `all`, `nano`, `small`, `medium` | `all` | `all` enables the Nano/Small/Medium picker. A single value packages only that choice. |
-| `AI_MODEL_PRECISION` | `fp32`, `fp16` | `fp16` | WebGPU is preferred for FP16. Without WebGPU it falls back to WASM/CPU, which is slower. |
-| `AI_MODEL_IMAGE_SIZE` | integer, e.g. `320`, `416`, `640` | `416` | A larger square input improves small-object detail at a memory/latency cost. |
+| `AI_MODEL_PRECISION` | `all`, `fp32`, `fp16`, `int8` | `all` | `all` packages FP16 and INT8. INT8 uses COCO8 calibration. INT4 is not supported for YOLO26 ONNX. |
+| `AI_MODEL_IMAGE_SIZE` | integer, e.g. `320`, `416`, `640` | `320` | A larger square input improves small-object detail at a memory/latency cost. |
 
 PowerShell examples:
 
 ```powershell
-# All model sizes in FP32: compatible with WebGPU and WASM fallback
+# All sizes with both UI-selectable precisions
 $env:AI_MODEL_VARIANT = "all"
-$env:AI_MODEL_PRECISION = "fp32"
+$env:AI_MODEL_PRECISION = "all"
 docker compose up --build
 
-# Package only Medium FP16
-$env:AI_MODEL_VARIANT = "medium"
-$env:AI_MODEL_PRECISION = "fp16"
-$env:AI_MODEL_IMAGE_SIZE = "416"
+# Lowest-latency package for CPU/WASM
+$env:AI_MODEL_VARIANT = "nano"
+$env:AI_MODEL_PRECISION = "int8"
+$env:AI_MODEL_IMAGE_SIZE = "320"
 docker compose up --build
 ```
 
 For the non-Docker exporter, pass the same selection explicitly:
 
 ```powershell
-py scripts/export-yolo26n.py --variant all --precision fp16 --imgsz 416
+py tools/ai-models/export-yolo26n.py --variant all --precision all --imgsz 320
 ```
 
-The picker identifies each available variant and precision. Nano FP16 is selected by default. Turn AI off before changing models so the existing worker and model memory are released. Browsers without WebGPU automatically use WASM/CPU; build an FP32 catalog if FP16 CPU performance is too slow.
+The two pickers select model size and precision independently. Nano FP16 is selected by default. Choose Nano INT8 for the lowest CPU/WASM latency; use Small or Medium only when the device can keep up. Turn AI off before changing models so the existing worker and model memory are released. INT4 appears as unavailable because the official YOLO26 ONNX exporter supports FP32, FP16, and INT8—not INT4.
 
 ### Production build
 
@@ -181,7 +206,7 @@ npm run validate-data
 npm run validate-streams
 ```
 
-Review unresolved locations after ingestion. Add verified coordinates to [`data/overrides.json`](data/overrides.json) using the camera site ID as the key, then run the ingestion again. Manual coordinates always take precedence over the previously generated dataset.
+Review unresolved locations after ingestion. Add verified coordinates to [`data/manual/overrides.json`](data/manual/overrides.json) using the camera site ID as the key, then run the ingestion again. Manual coordinates always take precedence over the previously generated dataset.
 
 ## Quality checks
 
@@ -218,7 +243,7 @@ When explicitly enabled, object detection runs on the user's device for only the
 
 Corrections and improvements are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the development workflow, data-correction process, and pull request checklist.
 
-Please do not edit `data/cameras.json` directly. For incorrect camera coordinates, add a verified correction to `data/overrides.json` and regenerate the dataset.
+Please do not edit `data/generated/cameras.json` directly. For incorrect camera coordinates, add a verified correction to `data/manual/overrides.json` and regenerate the dataset.
 
 ## License and attribution
 

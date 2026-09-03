@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { CameraPlayback } from "@/lib/types";
+import type { CameraPlayback } from "@/domain/cameras/types";
 
 export function DirectVideoPlayer({ playback, title, reloadKey, onVideoChange, onFallback }: {
   playback: CameraPlayback;

@@ -4,24 +4,24 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 FROM base AS dependencies
 COPY package.json package-lock.json ./
-COPY scripts/copy-ort-assets.mjs ./scripts/copy-ort-assets.mjs
+COPY tools/build/copy-ort-assets.mjs ./tools/build/copy-ort-assets.mjs
 RUN npm ci
 
 FROM python:3.12-slim AS ai-model
 WORKDIR /app
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV PIP_NO_CACHE_DIR=1
+COPY tools/ai-models/requirements.txt ./tools/ai-models/requirements.txt
+RUN python -m pip install -r tools/ai-models/requirements.txt
+RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 libxcb1 libxext6 && rm -rf /var/lib/apt/lists/*
 ARG AI_MODEL_VARIANT=all
-ARG AI_MODEL_PRECISION=fp16
-ARG AI_MODEL_IMAGE_SIZE=416
+ARG AI_MODEL_PRECISION=all
+ARG AI_MODEL_IMAGE_SIZE=320
 ENV AI_MODEL_VARIANT=${AI_MODEL_VARIANT}
 ENV AI_MODEL_PRECISION=${AI_MODEL_PRECISION}
 ENV AI_MODEL_IMAGE_SIZE=${AI_MODEL_IMAGE_SIZE}
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1
-ENV PIP_NO_CACHE_DIR=1
-COPY requirements-ai.txt ./
-RUN python -m pip install -r requirements-ai.txt
-RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 libxcb1 libxext6 && rm -rf /var/lib/apt/lists/*
-COPY scripts/export-yolo26n.py ./scripts/export-yolo26n.py
-RUN python scripts/export-yolo26n.py
+COPY tools/ai-models/export-yolo26n.py ./tools/ai-models/export-yolo26n.py
+RUN python tools/ai-models/export-yolo26n.py
 
 FROM base AS development
 ARG NEXT_PUBLIC_ENABLE_CCTV_AI=true

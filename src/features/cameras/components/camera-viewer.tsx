@@ -5,13 +5,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as Tabs from "@radix-ui/react-tabs";
 import { ExternalLink, Maximize2, RefreshCw, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { AiOverlay } from "@/components/ai-overlay";
-import { DirectVideoPlayer } from "@/components/direct-video-player";
-import type { CameraSite, StreamHealth } from "@/lib/types";
+import { DetectionOverlay } from "@/features/detection/components/detection-overlay";
+import { DirectVideoPlayer } from "@/features/video/components/direct-video-player";
+import type { CameraSite, StreamHealth } from "@/domain/cameras/types";
 
 const AI_FEATURE_ENABLED = process.env.NEXT_PUBLIC_ENABLE_CCTV_AI === "true";
 
-export function VideoViewer({ site, open, onOpenChange }: { site: CameraSite | null; open: boolean; onOpenChange: (open: boolean) => void }) {
+export function CameraViewer({ site, open, onOpenChange }: { site: CameraSite | null; open: boolean; onOpenChange: (open: boolean) => void }) {
   const [activeChannelId, setActiveChannelId] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "loaded" | "unavailable">("loading");
   const [health, setHealth] = useState<StreamHealth>("unknown");
@@ -19,6 +19,7 @@ export function VideoViewer({ site, open, onOpenChange }: { site: CameraSite | n
   const [fallback, setFallback] = useState(false);
   const [fallbackReason, setFallbackReason] = useState("");
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
+  const [detectionControlsElement, setDetectionControlsElement] = useState<HTMLDivElement | null>(null);
   const active = site?.channels.find((channel) => channel.id === activeChannelId) ?? site?.channels[0];
   const hasStream = Boolean(active?.embedUrl);
   const playback = active?.playback;
@@ -58,11 +59,12 @@ export function VideoViewer({ site, open, onOpenChange }: { site: CameraSite | n
           <div id="camera-frame" className="relative aspect-video overflow-hidden rounded-xl bg-black">
             {showDirect && playback && <DirectVideoPlayer key={`${active.id}-${reloadKey}`} playback={playback} title={`${site.name} ${active.label}`} reloadKey={reloadKey} onVideoChange={handleVideo} onFallback={handleFallback} />}
             {showIframe && <iframe key={`${active.id}-${reloadKey}-fallback`} src={active.embedUrl ?? undefined} title={`${site.name} ${active.label}`} className="h-full w-full border-0" allowFullScreen referrerPolicy="no-referrer" onLoad={() => setLoadState("loaded")} />}
-            {showDirect && AI_FEATURE_ENABLED && <AiOverlay video={video} eligible={Boolean(playback?.aiEligible)} generationKey={`${active.id}-${reloadKey}`} />}
+            {showDirect && AI_FEATURE_ENABLED && <DetectionOverlay video={video} eligible={Boolean(playback?.aiEligible)} generationKey={`${active.id}-${reloadKey}`} controlsTarget={detectionControlsElement} />}
             {loadState === "loading" && !showDirect && <div className="pointer-events-none absolute inset-0 grid place-items-center bg-black/35 text-sm text-slate-200">Menghubungkan ke siaran…</div>}
             {loadState === "unavailable" && <div className="absolute inset-0 grid place-items-center bg-slate-950 p-6 text-center"><div><p className="font-medium text-white">{hasStream ? "Siaran sedang tidak tersedia" : "Stream direct belum tersedia"}</p><p className="mt-2 text-sm text-slate-400">{hasStream ? "Coba lagi atau buka halaman sumber secara langsung." : "Lokasi tersedia di peta; buka katalog sumber untuk informasi kamera."}</p></div></div>}
           </div>
         </Tabs.Root>
+        {showDirect && AI_FEATURE_ENABLED && <div ref={setDetectionControlsElement} className="mt-3" />}
         <p className="mt-3 text-xs text-slate-500">{fallbackReason || (hasStream ? `Status koneksi: ${health === "available" ? "tersedia" : health === "unavailable" ? "tidak tersedia" : "belum dapat dipastikan"}` : "Status koneksi: tidak ada URL Bali Tower yang terverifikasi.")}</p>
         {showDirect && AI_FEATURE_ENABLED && <p className="mt-1 text-xs text-slate-500">AI hanya menganalisis kamera yang sedang dibuka dan berhenti saat pemutar ditutup.</p>}
         <div className="mt-4 flex flex-wrap gap-2">
