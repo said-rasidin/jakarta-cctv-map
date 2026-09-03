@@ -3,9 +3,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
+      args:
+        NEXT_PUBLIC_ENABLE_CCTV_AI: "true"
+        AI_MODEL_VARIANT: ${AI_MODEL_VARIANT:-nano}
+        AI_MODEL_PRECISION: ${AI_MODEL_PRECISION:-fp32}
+        AI_MODEL_IMAGE_SIZE: ${AI_MODEL_IMAGE_SIZE:-416}
     ports:
       - "3000:3000"
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_ENABLE_CCTV_AI: "true"
     restart: unless-stopped

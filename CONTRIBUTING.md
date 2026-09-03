@@ -44,9 +44,8 @@ Generated files should not be edited by hand. If a camera is displayed at the wr
    }
    ```
 
-4. Set `NOMINATIM_USER_AGENT` to a descriptive value containing a real contact address.
-5. Run `npm run ingest` and `npm run validate-data`.
-6. Include the regenerated `data/cameras.json` and `data/unresolved-locations.json` files in the pull request.
+4. Run `npm run ingest` and `npm run validate-data`.
+5. Include the regenerated `data/cameras.json` and `data/unresolved-locations.json` files in the pull request.
 
 For a removed, renamed, or unavailable upstream camera, include the source URL and evidence in an issue. Do not work around upstream access controls or add private camera feeds.
 

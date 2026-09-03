@@ -1,27 +1,23 @@
 import dataset from "../data/cameras.json";
-import { normalizeReferenceCoordinates, withinJakarta } from "../src/lib/camera";
+import { withinJakarta } from "../src/lib/camera";
 import type { CameraDataset } from "../src/lib/types";
 
 const value = dataset as CameraDataset;
-if (value.schemaVersion !== 1 || !value.sites.length) throw new Error("Camera dataset is empty or uses an unsupported schema.");
+if (value.schemaVersion !== 2 || !value.sites.length) throw new Error("Camera dataset is empty or uses an unsupported schema.");
+if (value.sourceUrl !== "https://jakcctv.jakarta.go.id/publik") throw new Error("Camera dataset does not use the official Jakarta public directory.");
 for (const site of value.sites) {
+  if (site.catalogSource !== "jakarta-public") throw new Error(`${site.id} does not come from the Jakarta public directory.`);
   if (!withinJakarta(site.coordinates.lat, site.coordinates.lng)) throw new Error(`${site.id} has coordinates outside Jakarta.`);
   if (!site.channels.length) throw new Error(`${site.id} has no channels.`);
   for (const channel of site.channels) {
     if (channel.embedUrl !== null && !channel.embedUrl.startsWith("https://")) throw new Error(`${channel.id} does not use HTTPS.`);
-    if (site.catalogSource === "balitower" && channel.embedUrl === null) throw new Error(`${channel.id} is missing a direct Bali Tower URL.`);
+    if (channel.embedUrl === null) throw new Error(`${channel.id} is missing a direct public stream URL.`);
+    const host = new URL(channel.embedUrl).hostname;
+    if (!["dki-jkt.balitower.co.id", "cctv-jsc.balitower.co.id"].includes(host)) throw new Error(`${channel.id} uses an unapproved stream host.`);
+    if (channel.playback.kind !== "hls" || !channel.playback.url || !channel.playback.aiEligible) throw new Error(`${channel.id} has no AI-eligible HLS playback metadata.`);
+    const playbackUrl = new URL(channel.playback.url);
+    if (playbackUrl.protocol !== "https:" || playbackUrl.pathname.split("/").at(-1) !== "index.m3u8") throw new Error(`${channel.id} has an invalid HLS URL.`);
+    if (!["dki-jkt.balitower.co.id", "cctv-jsc.balitower.co.id"].includes(playbackUrl.hostname)) throw new Error(`${channel.id} uses an unapproved HLS host.`);
   }
 }
-async function validateReference(referenceUrl: string) {
-  if (!referenceUrl) return;
-  const reference = JSON.parse(await import("node:fs/promises").then(({ readFile }) => readFile(referenceUrl, "utf8"))) as { cameras: Array<{ id?: number; content_type: string; cctv_name?: string; latitude?: number; longitude?: number; is_enabled?: boolean }> };
-  const expected = reference.cameras.filter((camera) => camera.content_type === "cctv" && camera.is_enabled && camera.id && camera.cctv_name).map((camera) => ({ camera, coordinates: normalizeReferenceCoordinates(camera.latitude ?? NaN, camera.longitude ?? NaN) })).filter((entry) => entry.coordinates !== null);
-  const sitesById = new Map(value.sites.map((site) => [site.id, site]));
-  for (const { camera, coordinates } of expected) {
-    const site = sitesById.get(`streetside-${camera.id}`);
-    if (!site) throw new Error(`Reference camera ${camera.id} is missing.`);
-    if (Math.abs(site.coordinates.lat - coordinates!.lat) > 1e-9 || Math.abs(site.coordinates.lng - coordinates!.lng) > 1e-9) throw new Error(`${site.id} does not align with its reference coordinates.`);
-  }
-  console.log(`Aligned ${expected.length} enabled cameras with the reference dataset.`);
-}
-validateReference(process.env.CAMERA_REFERENCE_FILE ?? "").then(() => console.log(`Validated ${value.sites.length} sites and ${value.sites.flatMap((site) => site.channels).length} channels.`)).catch((error) => { console.error(error); process.exitCode = 1; });
+console.log(`Validated ${value.sites.length} sites and ${value.sites.flatMap((site) => site.channels).length} channels.`);

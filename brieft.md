@@ -16,7 +16,7 @@ Build a modern, user-friendly interactive web application that parses public CCT
 *(Example: `[https://dki-jkt.balitower.co.id:7028/502507_JKP_SATPOL-PP_JL.-JEND.-GATOT-SUBROTO-C11_CCTV-02/embed.html](https://dki-jkt.balitower.co.id:7028/502507_JKP_SATPOL-PP_JL.-JEND.-GATOT-SUBROTO-C11_CCTV-02/embed.html)`)*
 * **Location Extraction Requirements:**
 1. Extract camera metadata: `Camera ID`, `Agency/Provider` (e.g., Satpol PP, Dishub, Bali Tower), `Street Name / Location Name`, `Latitude`, and `Longitude`.
-2. If exact coordinates are not supplied in the API/source, parse the location string (e.g., `"JL. JEND. GATOT SUBROTO"`) and geocode it using OpenStreetMap Nominatim / Mapbox to generate coordinates within Jakarta bounds.
+2. If exact coordinates are not supplied in the public directory, use manually extracted and reviewed coordinates within Jakarta bounds. Leave new locations unresolved until reviewed.
 
 
 

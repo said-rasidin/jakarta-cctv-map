@@ -19,6 +19,8 @@ test-results/
 # Local and temporary data
 .tmp-*
 *.local
+public/models/yolo26n/*.onnx
+public/models/yolo26n/manifest.json
 
 # Logs
 *.log

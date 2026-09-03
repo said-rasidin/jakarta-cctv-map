@@ -19,8 +19,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run ingest
-        env:
-          NOMINATIM_USER_AGENT: cctv-jakarta-map/0.1 (contact: ${{ vars.NOMINATIM_CONTACT_EMAIL }})
       - run: npm run validate-data
       - run: npm run validate-streams
       - name: Commit refreshed data

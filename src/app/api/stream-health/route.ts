@@ -9,17 +9,20 @@ const allowedHosts = new Set(["dki-jkt.balitower.co.id", "cctv-jsc.balitower.co.
 const allowedPorts = new Set(["7028", "8011"]);
 
 async function check(channel: CameraDataset["sites"][number]["channels"][number]): Promise<StreamHealth> {
-  if (!channel.embedUrl) return "unknown";
-  const target = new URL(channel.embedUrl);
+  if (!channel.playback.url) return "unknown";
+  const target = new URL(channel.playback.url);
   if (target.protocol !== "https:" || !allowedHosts.has(target.hostname) || !allowedPorts.has(target.port)) return "unavailable";
   try {
-    const response = await fetch(target, { method: "GET", headers: { Range: "bytes=0-1023", "User-Agent": "cctv-jakarta-map-health/0.1" }, cache: "no-store", signal: AbortSignal.timeout(7000) });
-    await response.body?.cancel();
-    return response.ok ? "available" : "unavailable";
+    const response = await fetch(target, { method: "GET", headers: { Origin: requestOrigin, "User-Agent": "cctv-jakarta-map-health/0.2" }, cache: "no-store", signal: AbortSignal.timeout(7000) });
+    if (!response.ok) { await response.body?.cancel(); return "unavailable"; }
+    const playlist = await response.text();
+    return playlist.startsWith("#EXTM3U") ? "available" : "unavailable";
   } catch {
     return "unknown";
   }
 }
+
+const requestOrigin = "http://localhost:3000";
 
 export async function GET(request: NextRequest) {
   const channelId = request.nextUrl.searchParams.get("channelId");

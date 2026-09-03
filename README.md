@@ -2,7 +2,7 @@
 
 An interactive map for finding and viewing public CCTV cameras across Jakarta.
 
-The application turns Jakarta's public camera directories into a searchable map. Users can search by road, district, agency, or camera ID; filter cameras by agency; find cameras near their current location; and preview supported live streams.
+The application turns Jakarta's official public CCTV directory into a searchable map. Users can search by road, district, agency, or camera ID; filter cameras by agency; find cameras near their current location; and preview supported live streams.
 
 > **Live demo:** Coming soon. The application is planned for deployment on Vercel.
 
@@ -16,20 +16,21 @@ The application turns Jakarta's public camera directories into a searchable map.
 - Nearby-camera discovery using browser geolocation
 - Multi-channel selection for supported camera locations
 - On-demand live-stream previews and availability checks
+- Opt-in, client-side YOLO26n object detection for the camera currently open
 - Light and dark map styles
 
 ## Data sources
 
-Camera metadata is collected from two public sources:
+Camera metadata and stream links are collected only from the official [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) directory. The ingestion script extracts camera IDs, location names, agencies, and public iframe URLs from that page.
 
-- [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) provides the directly embeddable CCTV streams. The ingestion script extracts camera IDs, location names, agencies, and stream URLs from this directory.
-- [Streetside camera catalog](https://streetside.mugnimaestra.dev/) provides additional public camera locations and coordinates. It is also used to improve the coordinates of matching cameras from the Jakarta CCTV directory.
+The official directory does not include map coordinates. Coordinates in this repository are manually extracted, reviewed, and maintained in [`data/overrides.json`](data/overrides.json); they are not fetched from a third-party camera catalogue.
 
-When a direct-stream location cannot be matched to the Streetside catalog, its coordinates are resolved in this order:
+Coordinates are resolved in this order:
 
-1. A manually reviewed entry in [`data/overrides.json`](data/overrides.json)
-2. Coordinates from the last successfully generated dataset
-3. Geocoding through [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org/)
+1. A manually extracted and reviewed entry in [`data/overrides.json`](data/overrides.json)
+2. A manually maintained coordinate from the last successfully generated dataset
+
+Newly listed sites without a manual coordinate are placed in [`data/unresolved-locations.json`](data/unresolved-locations.json) and are not published on the map until reviewed.
 
 Generated camera data is committed to [`data/cameras.json`](data/cameras.json), while locations that still need manual review are written to [`data/unresolved-locations.json`](data/unresolved-locations.json). The map tiles use OpenStreetMap data rendered by [CARTO](https://carto.com/attributions).
 
@@ -40,8 +41,7 @@ This project is an independent interface for publicly available data. Camera own
 ```mermaid
 flowchart LR
     A[Jakarta Public CCTV] --> D[Ingestion pipeline]
-    B[Streetside catalog] --> D
-    C[Nominatim and manual overrides] --> D
+    C[Manual coordinates] --> D
     D --> E[data/cameras.json]
     E --> F[Next.js application]
     F --> G[React Leaflet map]
@@ -49,10 +49,11 @@ flowchart LR
     G --> I[Search, filters, nearby cameras, preview]
 ```
 
-- **Data pipeline:** `scripts/ingest.ts` fetches and normalizes the source catalogs, groups multiple channels at the same site, resolves coordinates, and writes a versioned JSON dataset.
+- **Data pipeline:** `scripts/ingest.ts` fetches and normalizes the official public directory, groups multiple channels at the same site, applies manually maintained coordinates, and writes a versioned JSON dataset.
 - **Application:** Next.js loads the generated dataset at build time. The interactive React UI performs searching, filtering, distance sorting, and map interaction in the browser.
 - **Map:** React Leaflet renders CARTO map tiles, while Supercluster groups dense camera markers for responsive navigation.
 - **Streams:** Direct Bali Tower streams are loaded only when requested. A server-side API route checks approved stream hosts before the viewer reports availability.
+- **AI experiment:** A direct HLS player samples at most one frame at a time and runs YOLO26n in a browser worker. Frames are not uploaded, recorded, or retained. WebGPU is preferred with a single-thread WASM fallback.
 - **Automation:** GitHub Actions validates every change and refreshes the camera dataset daily. The refresh job keeps the last good dataset if an upstream source returns suspiciously little data.
 
 ## Run locally
@@ -73,6 +74,73 @@ Open [http://localhost:3000](http://localhost:3000).
 
 The repository already contains a generated camera dataset, so an internet connection is not required to build the application itself. Map tiles and live camera streams still require network access at runtime.
 
+### Optional local YOLO26n experiment
+
+The separately licensed model is not committed or downloaded during a normal app install. To enable **Coba AI**, install the pinned Python export dependencies and generate the web asset:
+
+```powershell
+Copy-Item .env.example .env.local
+# Set NEXT_PUBLIC_ENABLE_CCTV_AI=true in .env.local
+py -m pip install -r requirements-ai.txt
+py scripts/export-yolo26n.py
+npm run dev
+```
+
+The exporter creates a content-hashed, static 416×416 ONNX model plus its validated manifest under `public/models/yolo26n`. The first click downloads the model into the browser cache; AI stops and its worker/session are released when disabled, hidden, switched, or closed. Review Ultralytics licensing and the camera operator's terms before deployment.
+
+## How AI works
+
+The AI mode is opt-in. It never loads a model, records video, or sends pixels to the application server until the viewer presses **Coba AI** for the currently open camera.
+
+```mermaid
+flowchart LR
+    A[Open one CCTV stream] --> B[Direct HLS video element]
+    B --> C[One sampled decoded frame]
+    C --> D[Letterbox to model input]
+    D --> E[Browser inference worker]
+    E --> F[WebGPU preferred]
+    E --> G[Single-thread WASM fallback for FP32]
+    F --> H[Traffic-object boxes and counts]
+    G --> H
+    H --> I[Transparent local overlay]
+    J[Viewer closed, paused, hidden, or switched] --> K[Cancel sampling and release worker]
+```
+
+Only one frame can be in inference at a time. The sampler starts at roughly 1 frame/second and adapts between 0.5 and 3 FPS, prioritizing smooth video playback. The initial COCO labels shown are person, bicycle, car, motorcycle, bus, and truck. Results are ephemeral and experimental.
+
+### Choose a YOLO26 experiment
+
+Compose packages one selected model per image. Set these environment variables before `docker compose up --build`; use `--build` whenever any selection changes.
+
+| Setting | Values | Default | Notes |
+| --- | --- | --- | --- |
+| `AI_MODEL_VARIANT` | `nano`, `small`, `medium` | `nano` | Larger variants generally trade more download, memory, and latency for accuracy. |
+| `AI_MODEL_PRECISION` | `fp32`, `fp16` | `fp32` | FP16 requires a browser with WebGPU; it deliberately has no WASM fallback. |
+| `AI_MODEL_IMAGE_SIZE` | integer, e.g. `320`, `416`, `640` | `416` | A larger square input improves small-object detail at a memory/latency cost. |
+
+PowerShell examples:
+
+```powershell
+# Small FP32: compatible with WebGPU and WASM fallback
+$env:AI_MODEL_VARIANT = "small"
+$env:AI_MODEL_PRECISION = "fp32"
+docker compose up --build
+
+# Medium FP16: experiment only on a WebGPU-capable browser
+$env:AI_MODEL_VARIANT = "medium"
+$env:AI_MODEL_PRECISION = "fp16"
+$env:AI_MODEL_IMAGE_SIZE = "416"
+docker compose up --build
+```
+
+For the non-Docker exporter, pass the same selection explicitly:
+
+```powershell
+py scripts/export-yolo26n.py --variant small --precision fp32 --imgsz 416
+```
+
+The manifest shown by the viewer identifies the selected variant and precision. Select FP32 first for baseline correctness and compatibility; use FP16 only to benchmark WebGPU-capable devices.
+
 ### Production build
 
 ```bash
@@ -90,6 +158,8 @@ docker compose up --build
 
 The application will be available at [http://localhost:3000](http://localhost:3000).
 
+The Compose build automatically installs the pinned Python AI dependencies, exports the selected YOLO26 variant to the content-hashed ONNX web asset, and copies the ONNX Runtime browser files. It then starts `npm run dev` with the AI experiment enabled, so no host Python or Node setup is needed for local verification. A regular `docker build .` still produces the optimized production image.
+
 ## Deploy to Vercel
 
 The public deployment is not available yet. To create one:
@@ -99,17 +169,11 @@ The public deployment is not available yet. To create one:
 3. Deploy the `main` branch.
 4. Add the production URL to the **Live demo** section at the top of this README.
 
-The scheduled GitHub Actions refresh is separate from Vercel. Add a repository variable named `NOMINATIM_CONTACT_EMAIL` containing a valid operational email address before enabling the `Refresh camera dataset` workflow.
+The scheduled GitHub Actions refresh is separate from Vercel and can update the committed dataset independently of a Vercel deployment.
 
 ## Refresh the camera data
 
-Copy `.env.example` to `.env.local` and replace the placeholder with a descriptive user agent containing a real contact address, as required by the [Nominatim usage policy](https://operations.osmfoundation.org/policies/nominatim/):
-
-```env
-NOMINATIM_USER_AGENT=peta-cctv-jakarta/0.1 (contact: you@example.com)
-```
-
-Load the environment variable into your shell, then run:
+Run:
 
 ```bash
 npm run ingest
@@ -117,14 +181,7 @@ npm run validate-data
 npm run validate-streams
 ```
 
-The ingestion script reads `NOMINATIM_USER_AGENT` from the process environment; it does not automatically load `.env.local`. On PowerShell, for example:
-
-```powershell
-$env:NOMINATIM_USER_AGENT = "peta-cctv-jakarta/0.1 (contact: you@example.com)"
-npm run ingest
-```
-
-Review unresolved locations after ingestion. Add verified coordinates to [`data/overrides.json`](data/overrides.json) using the camera site ID as the key, then run the ingestion again. Manual overrides always take precedence over cached or geocoded coordinates.
+Review unresolved locations after ingestion. Add verified coordinates to [`data/overrides.json`](data/overrides.json) using the camera site ID as the key, then run the ingestion again. Manual coordinates always take precedence over the previously generated dataset.
 
 ## Quality checks
 
@@ -141,9 +198,10 @@ npm run build
 
 ## Known limitations
 
-- Some catalog locations do not provide a directly embeddable stream.
 - Public streams can be offline, slow, or blocked from embedding without notice.
-- Coordinates obtained through geocoding may be approximate and should be manually reviewed.
+- HLS playback and AI capture require full-chain CORS support; the viewer falls back to the public iframe and disables AI if direct playback fails.
+- YOLO detections are experimental and may be wrong. They must not be used for enforcement or public-safety decisions.
+- Manually extracted coordinates may be approximate and should be corrected through the review process.
 - Nearby-camera discovery requires browser location permission.
 - The application interface is currently in Indonesian, although this documentation is in English.
 - Map tiles, camera catalogs, and streams depend on third-party services outside this project's control.
@@ -153,6 +211,8 @@ npm run build
 The application does not store a user's location. Browser geolocation is requested only after the user selects the nearby-camera feature and remains in client-side memory for that session.
 
 Map tiles and camera streams are loaded from external providers. Those providers receive ordinary network information, such as the user's IP address, according to their own privacy policies. This project does not record or archive CCTV footage.
+
+When explicitly enabled, object detection runs on the user's device for only the open camera. Frames and detections are not sent to this application's server or stored by the application.
 
 ## Contributing
 
@@ -164,8 +224,4 @@ Please do not edit `data/cameras.json` directly. For incorrect camera coordinate
 
 Except for third-party materials described below, this project is licensed under the [Creative Commons Attribution 4.0 International License](LICENSE.md).
 
-The Streetside aggregated camera directory used by this project is published under CC BY 4.0. Required attribution:
-
-> Camera directory by [Streetside Jakarta](https://streetside.mugnimaestra.dev/), CC BY 4.0. Underlying CCTV feeds: DKI Jakarta Provincial Government, via the Molecool API.
-
-The underlying video and image feeds remain the property of their respective owners and are not covered by this project's license. OpenStreetMap, CARTO, dependencies, and other third-party materials remain subject to their own licenses and terms.
+Camera listings and public stream links come from the [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) directory. The underlying video and image feeds remain the property of their respective owners and are not covered by this project's license. OpenStreetMap, CARTO, dependencies, and other third-party materials remain subject to their own licenses and terms.
