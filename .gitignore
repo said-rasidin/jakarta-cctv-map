@@ -20,7 +20,7 @@ test-results/
 .tmp-*
 *.local
 public/models/yolo26n/*.onnx
-public/models/yolo26n/manifest.json
+public/models/yolo26n/*.json
 
 # Logs
 *.log

@@ -6,9 +6,9 @@ From the repository root, create a Python environment, install the pinned export
 
 ```powershell
 py -m pip install -r requirements-ai.txt
-py scripts/export-yolo26n.py --variant nano --precision fp32 --imgsz 416
+py scripts/export-yolo26n.py --variant all --precision fp16 --imgsz 416
 ```
 
-Use `--variant nano|small|medium` and `--precision fp32|fp16` to experiment. FP16 is WebGPU-only in the viewer. The exporter downloads the selected official checkpoint, exports a static end-to-end ONNX graph, checks the expected `[1, 300, 6]` output, and creates both the model and `manifest.json` here. Restart the Next.js dev server afterward.
+Use `--variant all|nano|small|medium` and `--precision fp32|fp16` to experiment. The defaults are all three sizes and FP16, with Nano FP16 selected in the UI. The viewer prefers WebGPU and falls back to slower WASM/CPU when it is unavailable. The exporter downloads the selected official checkpoints, exports static end-to-end ONNX graphs, checks the expected `[1, 300, 6]` output, and creates `catalog.json` plus a compatibility manifest here. The browser downloads only the selected model. Restart the Next.js dev server afterward.
 
 The generated `.onnx` and manifest are local artifacts and are ignored by Git. Review the [Ultralytics licensing terms](https://www.ultralytics.com/license) before distributing or deploying them.

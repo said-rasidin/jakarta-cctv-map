@@ -86,7 +86,7 @@ py scripts/export-yolo26n.py
 npm run dev
 ```
 
-The exporter creates a content-hashed, static 416×416 ONNX model plus its validated manifest under `public/models/yolo26n`. The first click downloads the model into the browser cache; AI stops and its worker/session are released when disabled, hidden, switched, or closed. Review Ultralytics licensing and the camera operator's terms before deployment.
+The exporter creates content-hashed 416×416 ONNX assets plus a validated model catalog under `public/models/yolo26n`. By default it prepares FP16 nano, small, and medium models. The camera viewer lets the user choose one and downloads only that model on the first **Coba AI** click. AI stops and its worker/session are released when disabled, hidden, switched, or closed. Review Ultralytics licensing and the camera operator's terms before deployment.
 
 ## How AI works
 
@@ -99,7 +99,7 @@ flowchart LR
     C --> D[Letterbox to model input]
     D --> E[Browser inference worker]
     E --> F[WebGPU preferred]
-    E --> G[Single-thread WASM fallback for FP32]
+    E --> G[Single-thread WASM fallback]
     F --> H[Traffic-object boxes and counts]
     G --> H
     H --> I[Transparent local overlay]
@@ -110,23 +110,23 @@ Only one frame can be in inference at a time. The sampler starts at roughly 1 fr
 
 ### Choose a YOLO26 experiment
 
-Compose packages one selected model per image. Set these environment variables before `docker compose up --build`; use `--build` whenever any selection changes.
+Compose packages all three selectable model sizes at one precision. The UI defaults to Nano FP16. Set these environment variables before `docker compose up --build`; use `--build` whenever the packaged selection changes.
 
 | Setting | Values | Default | Notes |
 | --- | --- | --- | --- |
-| `AI_MODEL_VARIANT` | `nano`, `small`, `medium` | `nano` | Larger variants generally trade more download, memory, and latency for accuracy. |
-| `AI_MODEL_PRECISION` | `fp32`, `fp16` | `fp32` | FP16 requires a browser with WebGPU; it deliberately has no WASM fallback. |
+| `AI_MODEL_VARIANT` | `all`, `nano`, `small`, `medium` | `all` | `all` enables the Nano/Small/Medium picker. A single value packages only that choice. |
+| `AI_MODEL_PRECISION` | `fp32`, `fp16` | `fp16` | WebGPU is preferred for FP16. Without WebGPU it falls back to WASM/CPU, which is slower. |
 | `AI_MODEL_IMAGE_SIZE` | integer, e.g. `320`, `416`, `640` | `416` | A larger square input improves small-object detail at a memory/latency cost. |
 
 PowerShell examples:
 
 ```powershell
-# Small FP32: compatible with WebGPU and WASM fallback
-$env:AI_MODEL_VARIANT = "small"
+# All model sizes in FP32: compatible with WebGPU and WASM fallback
+$env:AI_MODEL_VARIANT = "all"
 $env:AI_MODEL_PRECISION = "fp32"
 docker compose up --build
 
-# Medium FP16: experiment only on a WebGPU-capable browser
+# Package only Medium FP16
 $env:AI_MODEL_VARIANT = "medium"
 $env:AI_MODEL_PRECISION = "fp16"
 $env:AI_MODEL_IMAGE_SIZE = "416"
@@ -136,10 +136,10 @@ docker compose up --build
 For the non-Docker exporter, pass the same selection explicitly:
 
 ```powershell
-py scripts/export-yolo26n.py --variant small --precision fp32 --imgsz 416
+py scripts/export-yolo26n.py --variant all --precision fp16 --imgsz 416
 ```
 
-The manifest shown by the viewer identifies the selected variant and precision. Select FP32 first for baseline correctness and compatibility; use FP16 only to benchmark WebGPU-capable devices.
+The picker identifies each available variant and precision. Nano FP16 is selected by default. Turn AI off before changing models so the existing worker and model memory are released. Browsers without WebGPU automatically use WASM/CPU; build an FP32 catalog if FP16 CPU performance is too slow.
 
 ### Production build
 
@@ -158,7 +158,7 @@ docker compose up --build
 
 The application will be available at [http://localhost:3000](http://localhost:3000).
 
-The Compose build automatically installs the pinned Python AI dependencies, exports the selected YOLO26 variant to the content-hashed ONNX web asset, and copies the ONNX Runtime browser files. It then starts `npm run dev` with the AI experiment enabled, so no host Python or Node setup is needed for local verification. A regular `docker build .` still produces the optimized production image.
+The Compose build automatically installs the pinned Python AI dependencies, exports the selectable YOLO26 catalog to content-hashed ONNX web assets, and copies the ONNX Runtime browser files. It then starts `npm run dev` with the AI experiment enabled, so no host Python or Node setup is needed for local verification. A regular `docker build .` still produces the optimized production image.
 
 ## Deploy to Vercel
 

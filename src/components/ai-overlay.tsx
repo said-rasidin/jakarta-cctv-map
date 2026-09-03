@@ -3,7 +3,7 @@
 
 import { Bot, Pause, Play, ShieldCheck } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { COCO_LABELS, isModelManifest, type Detection, type ModelManifest } from "@/lib/ai";
+import { COCO_LABELS, isModelCatalog, type Detection, type ModelCatalog } from "@/lib/ai";
 
 type AiState = "off" | "checking" | "downloading" | "warming" | "running" | "paused" | "error";
 const COLORS: Record<number, string> = { 0: "#38bdf8", 1: "#a78bfa", 2: "#34d399", 3: "#fbbf24", 5: "#fb7185", 7: "#f97316" };
@@ -26,6 +26,10 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
   const [sourceSize, setSourceSize] = useState({ width: 1, height: 1 });
   const [lastResultAt, setLastResultAt] = useState(0);
   const [latency, setLatency] = useState(0);
+  const [catalog, setCatalog] = useState<ModelCatalog | null>(null);
+  const [selectedModel, setSelectedModel] = useState("");
+
+  const selectedManifest = catalog?.models.find((model) => model.id === selectedModel)?.manifest;
 
   const clear = useCallback(() => { setDetections([]); setLastResultAt(0); }, []);
 
@@ -36,6 +40,24 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
     setStatus("AI tidak aktif");
     clear();
   }, [generationKey, clear]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/models/yolo26n/catalog.json", { cache: "no-cache" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Model YOLO belum dipasang. Lihat public/models/README.md.");
+        const value: unknown = await response.json();
+        if (!isModelCatalog(value)) throw new Error("Katalog model AI tidak valid");
+        if (cancelled) return;
+        setCatalog(value);
+        const preferred = value.models.find((model) => model.manifest.variant === "nano" && model.manifest.precision === "fp16");
+        setSelectedModel(preferred?.id ?? value.defaultModel);
+      })
+      .catch((error) => {
+        if (!cancelled) setStatus(error instanceof Error ? error.message : "Katalog model gagal dimuat");
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -80,9 +102,9 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
   }, [detections, lastResultAt, sourceSize]);
 
   useEffect(() => {
-    if (!enabled || !eligible || !video) return;
+    if (!enabled || !eligible || !video || !selectedManifest) return;
     let cancelled = false;
-    let manifest: ModelManifest;
+    const manifest = selectedManifest;
     const generation = ++generationRef.current;
     setState("checking");
     setStatus("Memeriksa model AI…");
@@ -116,16 +138,9 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
       }
     };
 
-    fetch("/models/yolo26n/manifest.json", { cache: "no-cache" })
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Model YOLO26n belum dipasang. Lihat public/models/README.md.");
-        const value: unknown = await response.json();
-        if (!isModelManifest(value)) throw new Error("Manifest model tidak valid");
-        manifest = value;
-        setState("warming");
-        setStatus(`Menyiapkan ${manifest.modelName} (${(manifest.byteSize / 1024 / 1024).toFixed(1)} MB)…`);
-        worker.postMessage({ type: "init", manifest });
-      }).catch((error) => { setState("error"); setStatus(error instanceof Error ? error.message : "Model gagal dimuat"); });
+    setState("warming");
+    setStatus(`Menyiapkan ${manifest.modelName} (${(manifest.byteSize / 1024 / 1024).toFixed(1)} MB)…`);
+    worker.postMessage({ type: "init", manifest });
 
     const probe = document.createElement("canvas");
     probe.width = 2; probe.height = 2;
@@ -160,7 +175,7 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
       readyRef.current = false;
       clear();
     };
-  }, [enabled, eligible, video, generationKey, clear]);
+  }, [enabled, eligible, video, generationKey, clear, selectedManifest]);
 
   const counts = detections.reduce<Record<string, number>>((result, detection) => { const label = COCO_LABELS[detection.classId] ?? String(detection.classId); result[label] = (result[label] ?? 0) + 1; return result; }, {});
   const toggle = () => { if (enabled) { setEnabled(false); setState("off"); setStatus("AI tidak aktif"); } else { setEnabled(true); } };
@@ -173,9 +188,16 @@ export function AiOverlay({ video, eligible, generationKey }: { video: HTMLVideo
         {state === "downloading" && <div className="mt-1 h-1.5 w-36 overflow-hidden rounded-full bg-slate-700"><div className="h-full bg-sky-400" style={{ width: `${progress}%` }} /></div>}
         {state === "running" && <p className="mt-1 text-slate-400">{provider} · {latency ? `${Math.round(latency)} ms` : "pemanasan"} · {Object.entries(counts).map(([label, count]) => `${label} ${count}`).join(" · ") || "belum ada objek"}</p>}
       </div>
-      <button type="button" onClick={toggle} disabled={!eligible || !video} className="inline-flex items-center gap-1.5 rounded-lg border border-sky-400/50 bg-slate-950/90 px-2.5 py-2 text-xs font-semibold text-sky-200 disabled:cursor-not-allowed disabled:border-slate-700 disabled:text-slate-500">
-        {enabled ? <Pause size={13} /> : <Play size={13} />} {enabled ? "Matikan AI" : "Coba AI"}
-      </button>
+      <div className="flex items-center gap-2 rounded-lg bg-slate-950/90 p-1.5 backdrop-blur">
+        <label className="sr-only" htmlFor={`ai-model-${generationKey}`}>Pilih model AI</label>
+        <select id={`ai-model-${generationKey}`} value={selectedModel} onChange={(event) => setSelectedModel(event.target.value)} disabled={enabled || !catalog} className="max-w-40 rounded-md border border-slate-700 bg-slate-900 px-2 py-1.5 text-xs text-slate-100 disabled:cursor-not-allowed disabled:opacity-60" title={enabled ? "Matikan AI untuk mengganti model" : "Pilih model AI"}>
+          {!catalog && <option value="">Memuat model…</option>}
+          {catalog?.models.map(({ id, manifest }) => <option key={id} value={id}>{manifest.variant[0].toUpperCase() + manifest.variant.slice(1)} · {manifest.precision.toUpperCase()}</option>)}
+        </select>
+        <button type="button" onClick={toggle} disabled={!eligible || !video || !selectedManifest} className="inline-flex items-center gap-1.5 rounded-md border border-sky-400/50 px-2.5 py-1.5 text-xs font-semibold text-sky-200 disabled:cursor-not-allowed disabled:border-slate-700 disabled:text-slate-500">
+          {enabled ? <Pause size={13} /> : <Play size={13} />} {enabled ? "Matikan AI" : "Coba AI"}
+        </button>
+      </div>
     </div>
     {enabled && <p className="absolute bottom-12 left-2 inline-flex items-center gap-1 rounded bg-slate-950/80 px-2 py-1 text-[10px] text-emerald-200"><ShieldCheck size={11} /> Frame diproses lokal, tidak diunggah · Eksperimental</p>}
   </>;

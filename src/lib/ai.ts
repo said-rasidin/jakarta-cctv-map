@@ -31,6 +31,12 @@ export type ModelManifest = {
   license: string;
 };
 
+export type ModelCatalog = {
+  version: 1;
+  defaultModel: string;
+  models: Array<{ id: string; manifest: ModelManifest }>;
+};
+
 export function isModelManifest(value: unknown): value is ModelManifest {
   if (!value || typeof value !== "object") return false;
   const manifest = value as Partial<ModelManifest>;
@@ -42,6 +48,17 @@ export function isModelManifest(value: unknown): value is ModelManifest {
     && typeof manifest.output?.name === "string" && manifest.output.name.length > 0 && manifest.output.schema === "xyxy-confidence-class"
     && typeof manifest.modelName === "string" && ["nano", "small", "medium"].includes(manifest.variant ?? "")
     && ["fp32", "fp16"].includes(manifest.precision ?? "") && typeof manifest.license === "string";
+}
+
+export function isModelCatalog(value: unknown): value is ModelCatalog {
+  if (!value || typeof value !== "object") return false;
+  const catalog = value as Partial<ModelCatalog>;
+  return catalog.version === 1
+    && typeof catalog.defaultModel === "string"
+    && Array.isArray(catalog.models)
+    && catalog.models.length > 0
+    && catalog.models.every((entry) => Boolean(entry) && typeof entry.id === "string" && isModelManifest(entry.manifest))
+    && catalog.models.some((entry) => entry.id === catalog.defaultModel);
 }
 
 export function mapModelBoxToSource(detection: Detection, sourceWidth: number, sourceHeight: number, inputWidth: number, inputHeight: number): Detection {

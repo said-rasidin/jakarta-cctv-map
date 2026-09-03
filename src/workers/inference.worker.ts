@@ -58,12 +58,11 @@ async function createSession(modelManifest: ModelManifest) {
       ort = null;
     }
   }
-  if (modelManifest.precision === "fp16") throw new Error("Model FP16 memerlukan browser dengan WebGPU");
   ort = await import("onnxruntime-web");
   ort.env.wasm.numThreads = 1;
   ort.env.wasm.wasmPaths = "/ort/";
   session = await ort.InferenceSession.create(model, { executionProviders: ["wasm"] });
-  provider = "CPU";
+  provider = modelManifest.precision === "fp16" ? "CPU/WASM · FP16 lambat" : "CPU/WASM";
 }
 
 function float16ToFloat32(value: number) {
