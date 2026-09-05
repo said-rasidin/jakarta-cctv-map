@@ -1,0 +1,93 @@
+// Run against localhost:3107. Generate the synthetic HLS fixture as documented.
+import { chromium, expect } from "@playwright/test";
+import { readFile } from "node:fs/promises";
+const browser = await chromium.launch({ headless: true });
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+const page = await context.newPage();
+const errors = [];
+page.on("pageerror", (error) => errors.push(error.message));
+let playlists = 0;
+const epoch = Date.now() - 60000;
+await context.route("**/api/stream-health?**", (route) => route.fulfill({ json: { status: "available" } }));
+await context.route("**/api/map-tiles/**", (route) => route.fulfill({ status: 204 }));
+await context.route(/https:\/\/(?:dki-jkt|cctv-jsc)\.balitower\.co\.id/, async (route) => {
+  const url = route.request().url();
+  if (url.includes(".m3u8")) {
+    playlists++;
+    const lag = url.includes("CCTV-02") ? 2 : 0;
+    const last = Math.floor((Date.now() - epoch) / 2000) - lag;
+    const first = last - 8;
+    let text = `#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:2\n#EXT-X-MEDIA-SEQUENCE:${first}\n#EXT-X-DISCONTINUITY-SEQUENCE:${Math.floor(first / 12)}\n`;
+    for (let seq = first; seq <= last; seq++) {
+      if (seq > first && seq % 12 === 0) text += "#EXT-X-DISCONTINUITY\n";
+      text += `#EXT-X-PROGRAM-DATE-TIME:${new Date(epoch + seq * 2000).toISOString()}\n#EXTINF:2.000,\nindex${seq % 12}.ts\n`;
+    }
+    await route.fulfill({ contentType: "application/vnd.apple.mpegurl", headers: { "Access-Control-Allow-Origin": "*" }, body: text });
+  } else if (url.endsWith(".ts")) {
+    const filename = new URL(url).pathname.split("/").at(-1);
+    await route.fulfill({ contentType: "video/mp2t", headers: { "Access-Control-Allow-Origin": "*" }, body: await readFile(`out/monitor-fixture/${filename}`) });
+  } else await route.fulfill({ contentType: "text/html", body: "Synthetic fallback player" });
+});
+try {
+  await page.goto("http://localhost:3107");
+  await page.getByRole("button", { name: "Buka monitor (0)", exact: true }).click();
+  await page.getByLabel("Filter ruas monitor").selectOption("Jl. Letjen S. Parman");
+  const add = page.getByRole("button").filter({ hasText: "Tambah ke monitor" });
+  await add.first().click(); await add.first().click(); await add.first().click(); await add.first().click();
+  await expect(page.getByTestId("monitor-tile")).toHaveCount(4);
+  if (playlists !== 0) throw new Error("Selected cameras downloaded before Start");
+  await page.getByLabel("Nama susunan").fill("S. Parman utara ke selatan");
+  await page.getByRole("button", { name: "Simpan susunan" }).click();
+  await page.getByRole("button", { name: "Mulai monitor", exact: true }).click();
+  await expect.poll(() => page.locator("video").evaluateAll((videos) => videos.filter((v) => v.readyState >= 3 && !v.paused).length), { timeout: 20000 }).toBe(4);
+  await page.locator("video").first().evaluate((video) => { window.__firstVideo = video; });
+  await page.getByRole("button", { name: "Balik urutan" }).click();
+  if (!(await page.evaluate(() => window.__firstVideo.isConnected))) throw new Error("Reorder recreated video");
+  await page.getByLabel("Mode waktu").selectOption("aligned");
+  await expect(page.getByText(/(?:Selaras menurut metadata|Menyelaraskan) ·/)).toBeVisible({ timeout: 15000 });
+  await expect(page.getByText(/Selaras menurut metadata ·/)).toBeVisible({ timeout: 30000 });
+  await page.locator("video").nth(0).evaluate((video) => { video.muted = false; });
+  await page.locator("video").nth(1).evaluate((video) => { video.muted = false; });
+  await expect.poll(() => page.locator("video").evaluateAll((videos) => videos.filter((video) => !video.muted).length)).toBe(1);
+  await page.getByRole("button", { name: "Fokus / AI", exact: true }).first().click();
+  await expect(page.locator("video")).toHaveCount(4);
+  await page.screenshot({ path: "out/monitor-desktop.png", fullPage: true });
+  await page.getByRole("button", { name: "Jeda semua" }).click();
+  await expect(page.locator("video, iframe")).toHaveCount(0);
+  const pausedRequests = playlists;
+  await page.waitForTimeout(1200);
+  if (playlists !== pausedRequests) throw new Error("Playlists continued loading after pause");
+  await page.getByRole("button", { name: "Kembali ke peta" }).click();
+  await expect(page.locator("video, iframe")).toHaveCount(0);
+  await page.reload();
+  await page.getByRole("button", { name: "Buka monitor (4)", exact: true }).first().click();
+  await expect(page.getByLabel("Nama susunan")).toHaveValue("S. Parman utara ke selatan");
+  await expect(page.locator("video, iframe")).toHaveCount(0);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole("button", { name: "Mulai monitor", exact: true }).click();
+  await expect.poll(() => page.locator("video").count()).toBe(2);
+  await page.getByRole("button", { name: "Berikutnya", exact: true }).click();
+  await expect.poll(() => page.locator("video").count()).toBe(2);
+  await page.evaluate(() => { Object.defineProperty(document, "hidden", { configurable: true, value: true }); document.dispatchEvent(new Event("visibilitychange")); });
+  await expect(page.locator("video, iframe")).toHaveCount(0);
+  await page.evaluate(() => { Object.defineProperty(document, "hidden", { configurable: true, value: false }); document.dispatchEvent(new Event("visibilitychange")); });
+  await expect.poll(() => page.locator("video").count()).toBe(2);
+  await page.screenshot({ path: "out/monitor-mobile.png", fullPage: true });
+  if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error("Mobile horizontal overflow");
+  await page.getByRole("button", { name: "Kembali ke peta" }).click();
+  await expect(page.locator("video, iframe")).toHaveCount(0);
+  await page.evaluate(() => localStorage.setItem("cctv-monitor-workspace-v1", JSON.stringify({ version: 1, name: "Missing camera", layout: 4, channelIds: ["removed-channel"] })));
+  await page.reload();
+  await page.getByRole("button", { name: "Buka monitor (1)", exact: true }).first().click();
+  await expect(page.getByRole("heading", { name: /Kamera tidak ada di katalog/ })).toBeVisible();
+  await page.getByText("Opsi kamera · urutan, ganti, hapus", { exact: true }).click();
+  await page.getByRole("button", { name: "Ganti", exact: true }).click();
+  await page.getByRole("button").filter({ hasText: "Pilih pengganti" }).first().click();
+  await expect(page.getByTestId("monitor-tile")).toHaveCount(1);
+  await expect(page.getByRole("heading", { name: /Kamera tidak ada di katalog/ })).toHaveCount(0);
+  await page.getByText("Opsi kamera · urutan, ganti, hapus", { exact: true }).click();
+  await page.getByRole("button", { name: "Hapus", exact: true }).click();
+  await expect(page.getByTestId("monitor-tile")).toHaveCount(0);
+  if (errors.length) throw new Error(errors.join("\n"));
+  console.log("PASS: selection without downloads, 4 synthetic HLS videos, metadata convergence, single audio, reorder identity, focus, pause/close/background cleanup, local restore, mobile 2-player paging, missing-camera replacement/removal, no page errors.");
+} finally { await browser.close(); }

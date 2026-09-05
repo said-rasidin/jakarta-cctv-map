@@ -1,13 +1,31 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
-:root { color-scheme: dark; }
+/* UI shades inspired by +Jakarta Biru Abang / Jingga Bis Kota.
+   Accessible interface adaptations, not a claim of official affiliation. */
+@theme {
+  --color-slate-950: #091831;
+  --color-slate-900: #102747;
+  --color-slate-800: #19385c;
+  --color-slate-700: #2c5076;
+  --color-slate-600: #46688d;
+  --color-slate-500: #7691af;
+  --color-slate-400: #a0b5cf;
+  --color-sky-700: #16449b;
+  --color-sky-600: #1856ba;
+  --color-sky-500: #4387ec;
+  --color-sky-400: #7db5ff;
+  --color-sky-300: #a7cfff;
+  --color-sky-200: #c9e1ff;
+  --color-jakarta-orange: #ff9b52;
+}
+:root { color-scheme: dark; --app-background: #091831; --app-panel: #102747; }
 * { box-sizing: border-box; }
-html, body { min-height: 100%; background: #080b12; }
+html, body { min-height: 100%; background: var(--app-background); }
 body { margin: 0; color: #e7eaf0; font-family: Arial, Helvetica, sans-serif; }
 button, input { font: inherit; }
 .leaflet-container { background: #0b1018; font: inherit; }
-.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #161c27; color: #eef2ff; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--app-panel); color: #eef2ff; }
 .leaflet-popup-content { margin: 12px; }
 .map-marker, .cluster-marker { display: grid; place-items: center; border-radius: 999px; color: white; font-weight: 700; box-shadow: 0 6px 18px #0009; }
 .site-marker { display: flex; align-items: center; gap: 8px; width: max-content; }
@@ -18,4 +36,5 @@ button, input { font: inherit; }
 .map-marker--reference { background: #64748b; border-color: #e2e8f0; }
 .map-marker svg { width: 18px; height: 18px; transform: rotate(-8deg); }
 .site-marker-label { max-width: 172px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 1px solid rgb(203 213 225 / .95); border-radius: 999px; background: rgb(255 255 255 / .96); padding: 4px 9px; color: #0f172a; font-size: 11px; font-weight: 700; line-height: 1.1; box-shadow: 0 4px 14px rgb(15 23 42 / .2); }
-.cluster-marker { width: 42px; height: 42px; background: #6366f1; border: 3px solid #c7d2fe; }
+.cluster-marker { width: 42px; height: 42px; background: #1856ba; border: 3px solid #ff9b52; }
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid #ff9b52; outline-offset: 3px; }

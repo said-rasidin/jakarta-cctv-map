@@ -12,11 +12,15 @@ import type { CameraSite, StreamHealth } from "@/domain/cameras/types";
 const AI_FEATURE_ENABLED = process.env.NEXT_PUBLIC_ENABLE_CCTV_AI === "true";
 
 export function CameraViewer({
+  onAddToMonitor,
+  monitorIds = [],
   site,
   initialChannelId,
   open,
   onOpenChange,
 }: {
+  onAddToMonitor?: (id: string) => void;
+  monitorIds?: string[];
   site: CameraSite | null;
   initialChannelId: string | null;
   open: boolean;
@@ -111,7 +115,7 @@ export function CameraViewer({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm" />
-        <Dialog.Content className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-auto rounded-t-3xl border border-slate-700 bg-[#101622] p-4 shadow-2xl outline-none md:inset-y-0 md:right-0 md:left-auto md:w-[min(680px,56vw)] md:rounded-none md:border-y-0 md:border-r-0">
+        <Dialog.Content className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] overflow-auto rounded-t-3xl border border-slate-700 bg-slate-900 p-4 shadow-2xl outline-none md:inset-y-0 md:right-0 md:left-auto md:w-[min(680px,56vw)] md:rounded-none md:border-y-0 md:border-r-0">
           <div className="mb-4 flex items-start justify-between gap-3">
             <div>
               <Dialog.Title className="text-base font-semibold text-white">
@@ -222,6 +226,21 @@ export function CameraViewer({
             </p>
           )}
           <div className="mt-4 flex flex-wrap gap-2">
+            {onAddToMonitor && (
+              <button
+                disabled={
+                  !hasStream ||
+                  monitorIds.includes(active.id) ||
+                  monitorIds.length >= 12
+                }
+                onClick={() => onAddToMonitor(active.id)}
+                className="min-h-11 rounded-lg bg-sky-600 px-3 text-sm text-white disabled:opacity-50"
+              >
+                {monitorIds.includes(active.id)
+                  ? "Sudah ditambahkan ke monitor"
+                  : `Tambah ${active.label} ke monitor`}
+              </button>
+            )}
             {hasStream && (
               <>
                 <button

@@ -1,6 +1,6 @@
 # Multi-camera traffic monitoring: review and implementation plan
 
-Date: 2026-09-05. Status: proposed design; grid and synchronization are not implemented in this change.
+Date: 2026-09-05. Status: implemented for local verification. See [implementation notes](monitoring-implementation-notes.md) for delivered behavior, live playlist observations, conservative deviations, and remaining physical-device performance checks. The sections below retain the design rationale and acceptance targets.
 
 ## Findings from the current application
 

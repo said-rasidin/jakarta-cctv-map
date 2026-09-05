@@ -122,6 +122,8 @@ function Focus({
 }
 
 function CameraPin({
+  onAddToMonitor,
+  monitorIds,
   site,
   channels,
   position,
@@ -130,6 +132,8 @@ function CameraPin({
   onSelect,
   onPreview,
 }: {
+  onAddToMonitor: (id: string) => void;
+  monitorIds: string[];
   site: CameraSite;
   channels: CameraChannel[];
   position: [number, number];
@@ -163,13 +167,28 @@ function CameraPin({
           </div>
           <div className="mt-3 grid gap-2">
             {channels.map((channel) => (
-              <button
-                key={channel.id}
-                onClick={() => onPreview(site, channel.id)}
-                className="inline-flex min-h-9 items-center justify-center gap-1 rounded-md bg-sky-400 px-2 py-1.5 text-xs font-semibold text-slate-950"
-              >
-                <Video size={13} /> Buka {channel.label}
-              </button>
+              <div key={channel.id}>
+                <button
+                  key={channel.id}
+                  onClick={() => onPreview(site, channel.id)}
+                  className="inline-flex min-h-9 items-center justify-center gap-1 rounded-md bg-sky-400 px-2 py-1.5 text-xs font-semibold text-slate-950"
+                >
+                  <Video size={13} /> Buka {channel.label}
+                </button>
+                <button
+                  disabled={
+                    !channel.embedUrl ||
+                    monitorIds.includes(channel.id) ||
+                    monitorIds.length >= 12
+                  }
+                  onClick={() => onAddToMonitor(channel.id)}
+                  className="mt-1 min-h-11 w-full rounded-lg border border-sky-400 px-2 text-xs text-sky-200 disabled:opacity-50"
+                >
+                  {monitorIds.includes(channel.id)
+                    ? `Monitor #${monitorIds.indexOf(channel.id) + 1}`
+                    : `Tambah ${channel.label} ke monitor`}
+                </button>
+              </div>
             ))}
           </div>
         </div>
@@ -179,6 +198,8 @@ function CameraPin({
 }
 
 export function CameraMap({
+  onAddToMonitor,
+  monitorIds,
   sites,
   selected,
   selectedChannelId,
@@ -187,6 +208,8 @@ export function CameraMap({
   userLocation,
   streamHealth,
 }: {
+  onAddToMonitor: (id: string) => void;
+  monitorIds: string[];
   sites: CameraSite[];
   selected: CameraSite | null;
   selectedChannelId: string | null;
@@ -400,11 +423,20 @@ export function CameraMap({
           : undefined;
         return (
           <CameraPin
+            onAddToMonitor={onAddToMonitor}
+            monitorIds={monitorIds}
             key={`${site.id}-${channelIds.join("-")}`}
             site={site}
             channels={channels}
             position={[lat, lng]}
-            label={label}
+            label={
+              channels.some((channel) => monitorIds.includes(channel.id))
+                ? `${channels
+                    .filter((channel) => monitorIds.includes(channel.id))
+                    .map((channel) => `#${monitorIds.indexOf(channel.id) + 1}`)
+                    .join(", ")} ${label ?? site.roadName ?? site.name}`
+                : label
+            }
             status={statusFor(channels)}
             onSelect={onSelect}
             onPreview={onPreview}

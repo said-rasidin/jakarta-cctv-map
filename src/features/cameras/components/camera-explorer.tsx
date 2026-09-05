@@ -19,6 +19,15 @@ import {
 } from "@/features/cameras/hooks/use-camera-filters";
 import { useGeolocation } from "@/features/cameras/hooks/use-geolocation";
 import { useStreamHealth } from "@/features/cameras/hooks/use-stream-health";
+import { useWorkspace } from "@/features/monitoring/use-workspace";
+import { MAX_SELECTION } from "@/features/monitoring/workspace";
+const MonitorWorkspace = dynamic(
+  () =>
+    import("@/features/monitoring/monitor-workspace").then(
+      (m) => m.MonitorWorkspace,
+    ),
+  { ssr: false },
+);
 
 const CameraMap = dynamic(
   () =>
@@ -38,6 +47,8 @@ export default function CameraExplorer({
     null,
   );
   const [viewerOpen, setViewerOpen] = useState(false);
+  const [monitorOpen, setMonitorOpen] = useState(false);
+  const monitor = useWorkspace();
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [visibleGroups, setVisibleGroups] = useState(16);
@@ -64,8 +75,10 @@ export default function CameraExplorer({
     setSelectedChannelId(channelId);
   };
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#080b12]">
+    <main className="relative min-h-screen overflow-hidden bg-slate-950">
       <CameraMap
+        onAddToMonitor={monitor.add}
+        monitorIds={monitor.workspace.channelIds}
         sites={ordered}
         selected={selected}
         selectedChannelId={selectedChannelId}
@@ -77,9 +90,9 @@ export default function CameraExplorer({
         userLocation={userLocation}
         streamHealth={streamHealth}
       />
-      <aside className="absolute inset-x-3 top-3 z-20 rounded-2xl border border-slate-700/80 bg-[#101622]/95 p-3 shadow-2xl backdrop-blur md:inset-y-3 md:left-3 md:right-auto md:w-[360px] md:overflow-y-auto">
+      <aside className="absolute inset-x-3 top-3 z-20 rounded-2xl border border-slate-700/80 bg-slate-900/95 p-3 shadow-2xl backdrop-blur md:inset-y-3 md:left-3 md:right-auto md:w-[360px] md:overflow-y-auto">
         <div className="mb-4 flex items-center gap-3">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-sky-400 text-slate-950">
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-jakarta-orange text-slate-950">
             <Video size={19} />
           </div>
           <div>
@@ -92,6 +105,15 @@ export default function CameraExplorer({
             </p>
           </div>
         </div>
+        <button
+          onClick={() => {
+            setViewerOpen(false);
+            setMonitorOpen(true);
+          }}
+          className="mb-3 min-h-11 w-full rounded-xl bg-sky-600 px-3 text-sm font-semibold text-white"
+        >
+          Buka monitor ({monitor.workspace.channelIds.length})
+        </button>
         <label className="relative block">
           <span className="sr-only">Cari jalan, wilayah, atau ID CCTV</span>
           <Search
@@ -239,19 +261,43 @@ export default function CameraExplorer({
                 {expandedGroup === group.key && (
                   <div className="ml-6 border-l border-slate-700 pl-2">
                     {group.sites.map((site) => (
-                      <button
-                        key={site.id}
-                        onClick={() => {
-                          choose(site);
-                          setViewerOpen(true);
-                        }}
-                        className="block min-h-11 w-full rounded px-2 py-2 text-left text-sm text-slate-300 hover:bg-white/5 hover:text-white"
-                      >
-                        {site.name}
-                        <span className="block text-xs text-sky-300">
-                          Buka kamera
-                        </span>
-                      </button>
+                      <div key={site.id}>
+                        <button
+                          key={site.id}
+                          onClick={() => {
+                            choose(site);
+                            setViewerOpen(true);
+                          }}
+                          className="block min-h-11 w-full rounded px-2 py-2 text-left text-sm text-slate-300 hover:bg-white/5 hover:text-white"
+                        >
+                          {site.name}
+                          <span className="block text-xs text-sky-300">
+                            Buka kamera
+                          </span>
+                        </button>
+                        <div className="mb-2 flex flex-wrap gap-1">
+                          {site.channels.map((channel) => (
+                            <button
+                              key={channel.id}
+                              disabled={
+                                monitor.workspace.channelIds.includes(
+                                  channel.id,
+                                ) ||
+                                monitor.workspace.channelIds.length >=
+                                  MAX_SELECTION ||
+                                !channel.embedUrl
+                              }
+                              onClick={() => monitor.add(channel.id)}
+                              className="min-h-11 rounded-lg border border-slate-600 px-2 text-xs text-sky-200 disabled:opacity-50"
+                            >
+                              {channel.label} ·{" "}
+                              {monitor.workspace.channelIds.includes(channel.id)
+                                ? "Ditambahkan"
+                                : "+ Monitor"}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -275,11 +321,65 @@ export default function CameraExplorer({
         </div>
       </aside>
       <CameraViewer
+        onAddToMonitor={monitor.add}
+        monitorIds={monitor.workspace.channelIds}
         site={selected}
         initialChannelId={selectedChannelId}
         open={viewerOpen}
         onOpenChange={setViewerOpen}
       />
+      {monitor.workspace.channelIds.length > 0 && !monitorOpen && (
+        <div
+          className="absolute inset-x-3 bottom-7 z-20 rounded-xl border border-sky-700 bg-slate-950/95 p-3 text-white shadow-xl md:left-[390px]"
+          aria-label="Pilihan monitor"
+        >
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {monitor.workspace.channelIds.map((id, index) => {
+              const site = dataset.sites.find((site) =>
+                site.channels.some((channel) => channel.id === id),
+              );
+              return (
+                <button
+                  key={id}
+                  onClick={() =>
+                    monitor.setWorkspace({
+                      ...monitor.workspace,
+                      channelIds: monitor.workspace.channelIds.filter(
+                        (value) => value !== id,
+                      ),
+                    })
+                  }
+                  className="min-h-11 shrink-0 rounded-lg bg-slate-800 px-2 text-xs"
+                  aria-label={`Hapus ${site?.name ?? id} dari monitor`}
+                >
+                  {index + 1}. {site?.roadName ?? id} ·{" "}
+                  {id.split("-").slice(-1)[0]} ×
+                </button>
+              );
+            })}
+          </div>
+          <button
+            onClick={() => {
+              setViewerOpen(false);
+              setMonitorOpen(true);
+            }}
+            className="min-h-11 rounded-lg bg-sky-500 px-4 text-sm font-semibold text-slate-950"
+          >
+            Buka monitor ({monitor.workspace.channelIds.length})
+          </button>
+        </div>
+      )}
+      {monitorOpen && (
+        <MonitorWorkspace
+          streamHealth={streamHealth}
+          sites={dataset.sites}
+          workspace={monitor.workspace}
+          onChange={monitor.setWorkspace}
+          onClose={() => setMonitorOpen(false)}
+          onSave={monitor.save}
+          notice={monitor.notice}
+        />
+      )}
     </main>
   );
 }
