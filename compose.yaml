@@ -13,6 +13,8 @@ services:
       - "3000:3000"
     environment:
       NODE_ENV: development
+      CARTO_BASEMAP_API_KEY: ${CARTO_BASEMAP_API_KEY:-}
+      CARTO_API_ACCESS_TOKEN: ${CARTO_API_ACCESS_TOKEN:-}
       NEXT_TELEMETRY_DISABLED: "1"
       NEXT_PUBLIC_ENABLE_CCTV_AI: "true"
     restart: unless-stopped

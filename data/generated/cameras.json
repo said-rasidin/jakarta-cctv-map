@@ -12,11 +12,11 @@
       "areaCode": null,
       "agency": "Bali Tower",
       "provider": "Bali Tower",
-      "address": null,
+      "address": "Jl. Mesjid 1 pertigaan Jl. Pejompongan",
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2075,
-        "lng": 106.803543,
+        "lat": -6.207523,
+        "lng": 106.803651,
         "source": "manual"
       },
       "searchText": "700014 bendungan hilir 003 tanah abang bali tower bali tower cctv 1",
@@ -33,6 +33,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.207523,
+            "lng": 106.803651,
+            "source": "manual"
           }
         }
       ]
@@ -48,8 +53,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.19,
-        "lng": 106.7971,
+        "lat": -6.20102431069373,
+        "lng": 106.79972526729782,
         "source": "manual"
       },
       "searchText": "502535 jkb satpol pp simpang jl letjen s parman c07 palmerah jkb satpol pp bali tower cctv 01 cctv 02",
@@ -66,6 +71,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.20102431069373,
+            "lng": 106.79972526729782,
+            "source": "manual"
           }
         },
         {
@@ -80,6 +90,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.20102431069373,
+            "lng": 106.79972526729782,
+            "source": "manual"
           }
         }
       ]
@@ -95,8 +110,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.191,
-        "lng": 106.796,
+        "lat": -6.202109355832687,
+        "lng": 106.7994034896215,
         "source": "manual"
       },
       "searchText": "502645 jkb satpol pp simpang jl letjen s parman c08 palmerah jkb satpol pp bali tower cctv 01 cctv 02",
@@ -113,6 +128,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.202109355832687,
+            "lng": 106.7994034896215,
+            "source": "manual"
           }
         },
         {
@@ -127,6 +147,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.202109355832687,
+            "lng": 106.7994034896215,
+            "source": "manual"
           }
         }
       ]
@@ -142,8 +167,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.229,
-        "lng": 106.798,
+        "lat": -6.212333,
+        "lng": 106.807052,
         "source": "manual"
       },
       "searchText": "503536 jkp dbm flyover ladokgi c01 tanah abang jkp dbm bali tower cctv 01 cctv 02",
@@ -160,6 +185,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.212333,
+            "lng": 106.807052,
+            "source": "manual"
           }
         },
         {
@@ -174,6 +204,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.212333,
+            "lng": 106.807052,
+            "source": "manual"
           }
         }
       ]
@@ -207,6 +242,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.195357,
+            "lng": 106.823573,
+            "source": "manual"
           }
         },
         {
@@ -221,6 +261,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.195365,
+            "lng": 106.823639,
+            "source": "manual"
           }
         }
       ]
@@ -254,6 +299,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.214393,
+            "lng": 106.798516,
+            "source": "manual"
           }
         },
         {
@@ -268,6 +318,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.214393,
+            "lng": 106.798516,
+            "source": "manual"
           }
         }
       ]
@@ -283,8 +338,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2218,
-        "lng": 106.7985,
+        "lat": -6.213322,
+        "lng": 106.802250,
         "source": "manual"
       },
       "searchText": "502160 jkp polda jl gerbang pemuda c03 tanah abang jkp polda bali tower cctv 01 cctv 02",
@@ -301,6 +356,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.213322,
+            "lng": 106.802250,
+            "source": "manual"
           }
         },
         {
@@ -315,6 +375,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.213322,
+            "lng": 106.802250,
+            "source": "manual"
           }
         }
       ]
@@ -330,8 +395,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.238,
-        "lng": 106.824,
+        "lat": -6.207606,
+        "lng": 106.803727,
         "source": "manual"
       },
       "searchText": "503300 jkp polda jl jend gatot subroto c13 setiabudi jkp polda bali tower cctv 01 cctv 02",
@@ -348,6 +413,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.207606,
+            "lng": 106.803727,
+            "source": "manual"
           }
         },
         {
@@ -362,6 +432,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.207606,
+            "lng": 106.803727,
+            "source": "manual"
           }
         }
       ]
@@ -377,8 +452,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.239,
-        "lng": 106.824,
+        "lat": -6.212980,
+        "lng": 106.807790,
         "source": "manual"
       },
       "searchText": "503303 jkp polda jl jend gatot subroto c14 setiabudi jkp polda bali tower cctv 01 cctv 02",
@@ -395,6 +470,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.212980,
+            "lng": 106.807790,
+            "source": "manual"
           }
         },
         {
@@ -409,6 +489,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.212980,
+            "lng": 106.807790,
+            "source": "manual"
           }
         }
       ]
@@ -424,8 +509,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.21,
-        "lng": 106.792,
+        "lat": -6.218471,
+        "lng": 106.791992,
         "source": "manual"
       },
       "searchText": "503301 jkp polda jl tentara pelajar c04 kebayoran lama jkp polda bali tower cctv 01 cctv 02",
@@ -442,6 +527,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.218471,
+            "lng": 106.791992,
+            "source": "manual"
           }
         },
         {
@@ -456,6 +546,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.210261518417967,
+            "lng": 106.79639578465134,
+            "source": "manual"
           }
         }
       ]
@@ -471,8 +566,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2352,
-        "lng": 106.8237,
+        "lat": -6.208592,
+        "lng": 106.803801,
         "source": "manual"
       },
       "searchText": "502045 jkp polda jpo jl gatot subroto 7 setiabudi jkp polda bali tower cctv 01 cctv 02",
@@ -489,6 +584,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.208592,
+            "lng": 106.803801,
+            "source": "manual"
           }
         },
         {
@@ -503,6 +603,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.208592,
+            "lng": 106.803801,
+            "source": "manual"
           }
         }
       ]
@@ -518,8 +623,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2085,
-        "lng": 106.82,
+        "lat": -6.199656,
+        "lng": 106.822934,
         "source": "manual"
       },
       "searchText": "504866 jkp polri uob plaza c01 setiabudi jkp polri bali tower cctv 01 cctv 02 cctv 03",
@@ -536,6 +641,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.199656,
+            "lng": 106.822934,
+            "source": "manual"
           }
         },
         {
@@ -550,6 +660,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.199656,
+            "lng": 106.822934,
+            "source": "manual"
           }
         },
         {
@@ -564,6 +679,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.199656,
+            "lng": 106.822934,
+            "source": "manual"
           }
         }
       ]
@@ -579,8 +699,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2212,
-        "lng": 106.798,
+        "lat": -6.212668,
+        "lng": 106.807005,
         "source": "manual"
       },
       "searchText": "502506 jkp satpol pp jl gerbang pemuda c04 tanah abang jkp satpol pp bali tower cctv 01 cctv 02",
@@ -597,6 +717,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.212668,
+            "lng": 106.807005,
+            "source": "manual"
           }
         },
         {
@@ -611,6 +736,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.212668,
+            "lng": 106.807005,
+            "source": "manual"
           }
         }
       ]
@@ -626,8 +756,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.237,
-        "lng": 106.824,
+        "lat": -6.208793,
+        "lng": 106.804018,
         "source": "manual"
       },
       "searchText": "502507 jkp satpol pp jl jend gatot subroto c11 setiabudi jkp satpol pp bali tower cctv 01 cctv 02",
@@ -644,6 +774,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.208793,
+            "lng": 106.804018,
+            "source": "manual"
           }
         },
         {
@@ -658,6 +793,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.208793,
+            "lng": 106.804018,
+            "source": "manual"
           }
         }
       ]
@@ -673,8 +813,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.1901,
-        "lng": 106.823,
+        "lat": -6.195706,
+        "lng": 106.823248,
         "source": "manual"
       },
       "searchText": "502491 jkp satpol pp simpang jl mh thamrin c07 menteng jkp satpol pp bali tower cctv 01 cctv 02",
@@ -691,6 +831,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+          "lat": -6.195706,
+          "lng": 106.823248,
+            "source": "manual"
           }
         },
         {
@@ -705,6 +850,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.195706,
+            "lng": 106.823248,
+            "source": "manual"
           }
         }
       ]
@@ -720,8 +870,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.1905,
-        "lng": 106.8225,
+        "lat": -6.195605,
+        "lng": 106.822769,
         "source": "manual"
       },
       "searchText": "502492 jkp satpol pp simpang jl mh thamrin c08 menteng jkp satpol pp bali tower cctv 01 cctv 02",
@@ -738,6 +888,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.195605,
+            "lng": 106.822769,
+            "source": "manual"
           }
         },
         {
@@ -752,6 +907,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.194353,
+            "lng": 106.823435,
+            "source": "manual"
           }
         }
       ]
@@ -767,8 +927,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.1897,
-        "lng": 106.8236,
+        "lat": -6.195516,
+        "lng":  106.822721,
         "source": "manual"
       },
       "searchText": "502493 jkp satpol pp simpang jl mh thamrin c09 menteng jkp satpol pp bali tower cctv 01 cctv 02",
@@ -785,6 +945,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.195516,
+            "lng":  106.822721,
+            "source": "manual"
           }
         },
         {
@@ -799,6 +964,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.195516,
+            "lng":  106.822721,
+            "source": "manual"
           }
         }
       ]
@@ -814,8 +984,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.1916,
-        "lng": 106.8228,
+        "lat": -6.195314,
+        "lng": 106.823622,
         "source": "manual"
       },
       "searchText": "501941 jkp satpolpp jl mh thamrin c02 menteng jkp satpol pp bali tower cctv 01 cctv 02",
@@ -832,6 +1002,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.195314,
+            "lng": 106.823622,
+            "source": "manual"
           }
         },
         {
@@ -846,6 +1021,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.195368,
+            "lng": 106.823603,
+            "source": "manual"
           }
         }
       ]
@@ -861,8 +1041,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.179,
-        "lng": 106.818,
+        "lat": -6.185732,
+        "lng": 106.811199,
         "source": "manual"
       },
       "searchText": "503675 jl jati baru raya c02 tanah abang jkp bakesbangpol bali tower cctv 01",
@@ -879,6 +1059,30 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.185732,
+            "lng": 106.811199,
+            "source": "manual"
+          }
+        },
+        {
+          "id": "503675-cctv-02",
+          "label": "CCTV-02",
+          "embedUrl": "https://dki-jkt.balitower.co.id:7028/503675_JKP_BAKESBANGPOL_JL.-JATI-BARU-RAYA-C02_CCTV-02/embed.html",
+          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/503675_JKP_BAKESBANGPOL_JL.-JATI-BARU-RAYA-C02_CCTV-02/embed.html",
+          "playback": {
+            "kind": "hls",
+            "url": "https://dki-jkt.balitower.co.id:7028/503675_JKP_BAKESBANGPOL_JL.-JATI-BARU-RAYA-C02_CCTV-02/index.m3u8",
+            "embedUrl": "https://dki-jkt.balitower.co.id:7028/503675_JKP_BAKESBANGPOL_JL.-JATI-BARU-RAYA-C02_CCTV-02/embed.html",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.185732,
+            "lng": 106.811199,
+            "source": "manual"
           }
         }
       ]
@@ -894,8 +1098,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.179,
-        "lng": 106.816,
+        "lat": -6.185086,
+        "lng": 106.814782,
         "source": "manual"
       },
       "searchText": "503343 jl kh mas mansyur c02 gambir jkp dbm bali tower cctv 01 cctv 02",
@@ -912,6 +1116,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.185086,
+            "lng": 106.814782,
+            "source": "manual"
           }
         },
         {
@@ -926,6 +1135,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.184996,
+            "lng": 106.814914,
+            "source": "manual"
           }
         }
       ]
@@ -941,8 +1155,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2142,
-        "lng": 106.8282,
+        "lat": -6.209280359948067,
+        "lng": 106.84985007270394,
         "source": "manual"
       },
       "searchText": "501594 jl sultan agung c03 setiabudi jks disgulkarmat bali tower cctv 01",
@@ -959,6 +1173,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.209280359948067,
+            "lng": 106.84985007270394,
+            "source": "manual"
           }
         }
       ]
@@ -974,8 +1193,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.19,
-        "lng": 106.815,
+        "lat": -6.197830324587427,
+        "lng": 106.8234818153728,
         "source": "manual"
       },
       "searchText": "700332 kebon melati 010 tanah abang bali tower bali tower cctv 2",
@@ -992,6 +1211,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.197830324587427,
+            "lng": 106.8234818153728,
+            "source": "manual"
           }
         }
       ]
@@ -1007,8 +1231,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.187,
-        "lng": 106.811,
+        "lat": -6.179062018610752,
+        "lng": 106.79623139600912,
         "source": "manual"
       },
       "searchText": "502540 pasar tanah abang c02 tanah abang jkb satpol pp bali tower cctv 01 cctv 02",
@@ -1025,6 +1249,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.179062018610752,
+            "lng": 106.79623139600912,
+            "source": "manual"
           }
         },
         {
@@ -1039,6 +1268,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.179062018610752,
+            "lng": 106.79623139600912,
+            "source": "manual"
           }
         }
       ]
@@ -1054,8 +1288,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.229418,
-        "lng": 106.800027,
+        "lat": -6.229487623632896,
+        "lng": 106.80002874551731,
         "source": "manual"
       },
       "searchText": "705084 senayan 001 kebayoran baru bali tower bali tower cctv 2",
@@ -1072,6 +1306,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.229487623632896,
+            "lng": 106.80002874551731,
+            "source": "manual"
           }
         }
       ]
@@ -1087,8 +1326,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.22363,
-        "lng": 106.80702,
+        "lat": -6.22353715828922,
+        "lng": 106.80694121615903,
         "source": "manual"
       },
       "searchText": "705979 senayan 018 tanah abang bali tower bali tower cctv 2",
@@ -1105,14 +1344,38 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.22353715828922,
+            "lng": 106.80694121615903,
+            "source": "manual"
+          }
+        },
+        {
+          "id": "705979-cctv-3",
+          "label": "CCTV-3",
+          "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-018-705979_3/embed.html?proto=hls",
+          "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-018-705979_3/embed.html?proto=hls",
+          "playback": {
+            "kind": "hls",
+            "url": "https://cctv-jsc.balitower.co.id:8011/Senayan-018-705979_3/index.m3u8",
+            "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-018-705979_3/embed.html?proto=hls",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.22353715828922,
+            "lng": 106.80694121615903,
+            "source": "manual"
           }
         }
       ]
     },
     {
       "id": "501493",
-      "name": "Simpang Jl. Panglima Polim-C01",
-      "normalizedName": "simpang jl panglima polim c01",
+      "name": "Simpang Jl. H. Fachrudin Tanah Abang-C01",
+      "normalizedName": "simpang jl H. Fachrudin Tanah Abang c01",
       "district": "Kebayoran Baru",
       "areaCode": "JKP",
       "agency": "Satpol PP",
@@ -1120,12 +1383,31 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2447,
-        "lng": 106.7995,
+        "lat": -6.188501816283913,
+        "lng": 106.81343125667587,
         "source": "manual"
       },
-      "searchText": "501493 simpang jl panglima polim c01 kebayoran baru jkp satpol pp bali tower cctv 02",
+      "searchText": "501493 simpang jl H. Fachrudin Tanah Abang",
       "channels": [
+          {
+          "id": "501493-cctv-01",
+          "label": "CCTV-01",
+          "embedUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/embed.html",
+          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/embed.html",
+          "playback": {
+            "kind": "hls",
+            "url": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/index.m3u8",
+            "embedUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/embed.html",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.188501816283913,
+            "lng": 106.81343125667587,
+            "source": "manual"
+          }
+        },
         {
           "id": "501493-cctv-02",
           "label": "CCTV-02",
@@ -1138,14 +1420,19 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.188501816283913,
+            "lng": 106.81343125667587,
+            "source": "manual"
           }
         }
       ]
     },
     {
       "id": "501862",
-      "name": "Simpang Jl. Sultan Agung-C01",
-      "normalizedName": "simpang jl sultan agung c01",
+      "name": "Simpang Jl. Letjen S. Parman",
+      "normalizedName": "simpang letjen s parman",
       "district": "Setiabudi",
       "areaCode": "JKB",
       "agency": "Dishub",
@@ -1153,11 +1440,11 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2148,
-        "lng": 106.829,
+        "lat": -6.179587715587482,
+        "lng": 106.79656590717552,
         "source": "manual"
       },
-      "searchText": "501862 simpang jl sultan agung c01 setiabudi jkb dishub bali tower cctv 01 cctv 03",
+      "searchText": "501862 simpang letjen s parman bali tower cctv 01 cctv 03",
       "channels": [
         {
           "id": "501862-cctv-01",
@@ -1171,6 +1458,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.179587715587482,
+            "lng": 106.79656590717552,
+            "source": "manual"
           }
         },
         {
@@ -1185,14 +1477,19 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.179587715587482,
+            "lng": 106.79656590717552,
+            "source": "manual"
           }
         }
       ]
     },
     {
       "id": "502041",
-      "name": "Simpang Jl. Sultan Agung-C02",
-      "normalizedName": "simpang jl sultan agung c02",
+      "name": "Jl. K.H. Mas Mansyur",
+      "normalizedName": "jl k h mas mansyur",
       "district": "Setiabudi",
       "areaCode": "JKP",
       "agency": "Polda",
@@ -1200,12 +1497,31 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2136,
-        "lng": 106.8295,
+        "lat": -6.1856455067199185,
+        "lng": 106.81559988920007,
         "source": "manual"
       },
-      "searchText": "502041 simpang jl sultan agung c02 setiabudi jkp polda bali tower cctv 02",
+      "searchText": "502041 jl k h mas mansyur bali tower cctv 02",
       "channels": [
+         {
+          "id": "502041-cctv-01",
+          "label": "CCTV-01",
+          "embedUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/embed.html",
+          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/embed.html",
+          "playback": {
+            "kind": "hls",
+            "url": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/index.m3u8",
+            "embedUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/embed.html",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.1856455067199185,
+            "lng": 106.81559988920007,
+            "source": "manual"
+          }
+        },
         {
           "id": "502041-cctv-02",
           "label": "CCTV-02",
@@ -1218,6 +1534,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.1856455067199185,
+            "lng": 106.81559988920007,
+            "source": "manual"
           }
         }
       ]
@@ -1233,8 +1554,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.2442,
-        "lng": 106.799,
+        "lat":-6.2426624363448235,
+        "lng": 106.79866450938083,
         "source": "manual"
       },
       "searchText": "501478 taman literasi c01 kebayoran baru jks satpol pp bali tower cctv 01",
@@ -1251,6 +1572,11 @@
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
+          },
+          "coordinates": {
+            "lat":-6.2426624363448235,
+            "lng": 106.79866450938083,
+            "source": "manual"
           }
         }
       ]

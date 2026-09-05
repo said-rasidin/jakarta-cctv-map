@@ -12,6 +12,7 @@ export type CameraPlayback = {
 export type CameraChannel = {
   id: string;
   label: string;
+  coordinates: { lat: number; lng: number; source: CoordinateSource };
   embedUrl: string | null;
   sourceUrl: string;
   playback: CameraPlayback;

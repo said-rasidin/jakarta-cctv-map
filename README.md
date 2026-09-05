@@ -23,7 +23,7 @@ The application turns Jakarta's official public CCTV directory into a searchable
 
 Camera metadata and stream links are collected only from the official [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) directory. The ingestion script extracts camera IDs, location names, agencies, and public iframe URLs from that page.
 
-The official directory does not include map coordinates. Coordinates in this repository are manually extracted, reviewed, and maintained in [`data/manual/overrides.json`](data/manual/overrides.json); they are not fetched from a third-party camera catalogue.
+The official directory does not include map coordinates. The author has manually reviewed the CCTV links and coordinates in the committed [`data/generated/cameras.json`](data/generated/cameras.json) snapshot and confirmed them as valid at review time. This records the author's review, not a guarantee of future stream availability. Coordinates are manually maintained in [`data/manual/overrides.json`](data/manual/overrides.json), including per-channel positions. Channels at different coordinates appear as independent map plots even when they share a site name. There is no runtime dependency on Streetside or Molecool; external maps/catalogues may have been consulted during manual review.
 
 Coordinates are resolved in this order:
 
@@ -94,6 +94,20 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+### CARTO map key
+
+Request a **basemap API key** from [CARTO](https://carto.com/basemaps/apikey/) and set it in `.env` or `.env.local`:
+
+```dotenv
+CARTO_BASEMAP_API_KEY=your_basemap_key_here
+```
+
+Replace the placeholder with your real basemap key. The previous `CARTO_API_ACCESS_TOKEN` variable is accepted as an alias only if its value is a basemap key. An account API access token is a different credential; `CARTO_API_BASE_URL` is not used for basemap tiles. Neither variable needs a `NEXT_PUBLIC_` prefix.
+
+Restart `npm run dev` after changing the environment. For Docker Compose, use `.env` (Compose does not automatically read `.env.local`) and run `docker compose up -d --force-recreate`. For Vercel, add `CARTO_BASEMAP_API_KEY` to the project environment and redeploy. Do not commit your key.
+
+The server tile route appends the key to CARTO requests, preserves attribution, and caches successful PNG responses; the key is not sent to browser code. This adds tile traffic through the app/Vercel. A hard refresh may be needed for previously cached watermarked tiles. A key cannot fix an invalid or expired credential. Raster tiles remain in use; a future vector migration would require replacing the Leaflet raster layer.
 
 The repository already contains a generated camera dataset, so an internet connection is not required to build the application itself. Map tiles and live camera streams still require network access at runtime.
 
