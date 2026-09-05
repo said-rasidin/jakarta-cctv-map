@@ -40,7 +40,68 @@
             "source": "manual"
           },
           "roadName": "Bendungan Hilir"
+        },
+        {
+          "id": "700014-cctv-2",
+          "label": "CCTV-2",
+          "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_2/embed.html?proto=hls",
+          "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_2/embed.html?proto=hls",
+          "playback": {
+            "kind": "hls",
+            "url": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_2/index.m3u8",
+            "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_2/embed.html?proto=hls",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.207523,
+            "lng": 106.803651,
+            "source": "manual"
+          },
+          "roadName": "Bendungan Hilir"
+        },
+        {
+          "id": "700014-cctv-3",
+          "label": "CCTV-3",
+          "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_3/embed.html?proto=hls",
+          "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_3/embed.html?proto=hls",
+          "playback": {
+            "kind": "hls",
+            "url": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_3/index.m3u8",
+            "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_3/embed.html?proto=hls",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.207523,
+            "lng": 106.803651,
+            "source": "manual"
+          },
+          "roadName": "Bendungan Hilir"
+        },
+        {
+          "id": "700014-cctv-4",
+          "label": "CCTV-4",
+          "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_4/embed.html?proto=hls",
+          "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_4/embed.html?proto=hls",
+          "playback": {
+            "kind": "hls",
+            "url": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_4/index.m3u8",
+            "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Bendungan-Hilir-003-700014_4/embed.html?proto=hls",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.207523,
+            "lng": 106.803651,
+            "source": "manual"
+          },
+          "roadName": "Bendungan Hilir"
         }
+
       ],
       "sourceName": "Bendungan Hilir 003",
       "roadName": "Bendungan Hilir"
@@ -1589,12 +1650,12 @@
         {
           "id": "501493-cctv-01",
           "label": "CCTV-01",
-          "embedUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/embed.html",
-          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/embed.html",
+          "embedUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C02_CCTV-01/embed.html",
+          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C02_CCTV-01/embed.html",
           "playback": {
             "kind": "hls",
-            "url": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/index.m3u8",
-            "embedUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/embed.html",
+            "url": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C02_CCTV-01/index.m3u8",
+            "embedUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C02_CCTV-01/embed.html",
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
@@ -1711,12 +1772,12 @@
         {
           "id": "502041-cctv-01",
           "label": "CCTV-01",
-          "embedUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/embed.html",
-          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/embed.html",
+          "embedUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C02_CCTV-01/embed.html",
+          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C02_CCTV-01/embed.html",
           "playback": {
             "kind": "hls",
-            "url": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/index.m3u8",
-            "embedUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/embed.html",
+            "url": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C02_CCTV-01/index.m3u8",
+            "embedUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C02_CCTV-01/embed.html",
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
