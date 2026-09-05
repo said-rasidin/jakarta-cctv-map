@@ -8,6 +8,7 @@ import { DetectionCanvas } from "@/features/detection/components/detection-canva
 import { DetectionControls, type DetectionState } from "@/features/detection/components/detection-controls";
 import { isModelCatalog, type ModelCatalog, type ModelPrecision, type ModelVariant } from "@/features/detection/model-catalog";
 import { COCO_LABELS, type Detection } from "@/features/detection/postprocess";
+import { remainingFrameLifetime } from "@/features/detection/frame-timing";
 
 export function DetectionOverlay({ video, eligible, generationKey, controlsTarget }: { video: HTMLVideoElement | null; eligible: boolean; generationKey: string; controlsTarget: HTMLElement | null }) {
   const workerRef = useRef<Worker | null>(null);
@@ -24,15 +25,17 @@ export function DetectionOverlay({ video, eligible, generationKey, controlsTarge
   const [progress, setProgress] = useState(0);
   const [detections, setDetections] = useState<Detection[]>([]);
   const [sourceSize, setSourceSize] = useState({ width: 1, height: 1 });
-  const [lastResultAt, setLastResultAt] = useState(0);
   const [latency, setLatency] = useState(0);
+  const [fps, setFps] = useState(0);
+  const [appliedModel, setAppliedModel] = useState<string | null>(null);
   const [catalog, setCatalog] = useState<ModelCatalog | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<ModelVariant>("nano");
   const [selectedPrecision, setSelectedPrecision] = useState<ModelPrecision>("fp16");
 
   const selectedManifest = catalog?.models.find(({ manifest }) => manifest.variant === selectedVariant && manifest.precision === selectedPrecision)?.manifest;
+  const activeManifest = catalog?.models.find(({ id }) => id === appliedModel)?.manifest;
 
-  const clear = useCallback(() => { setDetections([]); setLastResultAt(0); }, []);
+  const clear = useCallback(() => { setDetections([]); }, []);
 
   useEffect(() => {
     generationRef.current += 1;
@@ -64,16 +67,31 @@ export function DetectionOverlay({ video, eligible, generationKey, controlsTarge
   }, []);
 
   useEffect(() => {
-    if (!enabled || !eligible || !video || !selectedManifest) return;
+    if (!enabled || !eligible || !video || !activeManifest) return;
     let cancelled = false;
-    const manifest = selectedManifest;
+    let expiryTimer: number | undefined;
+    let previousResult = 0;
+    let capturedAt = 0;
+    let capturedMediaTime = 0;
+    const manifest = activeManifest;
     const generation = ++generationRef.current;
     lastSampleRef.current = Number.NEGATIVE_INFINITY;
     intervalRef.current = 200;
+    setLatency(0); setFps(0); setProgress(0); setProvider("");
     setState("checking");
     setStatus("Memeriksa model AI…");
     const worker = new Worker(new URL("../workers/inference.worker.ts", import.meta.url), { type: "module" });
     workerRef.current = worker;
+    const fail = (message: string) => {
+      readyRef.current = false;
+      busyRef.current = false;
+      setEnabled(false);
+      setState("error");
+      setStatus(message);
+      clear();
+    };
+    worker.onerror = () => fail("AI berhenti karena kesalahan pemrosesan. Coba model Nano lalu mulai lagi.");
+    worker.onmessageerror = () => fail("Hasil AI tidak dapat dibaca. Mulai AI lagi.");
 
     worker.onmessage = (event: MessageEvent<Record<string, unknown>>) => {
       if (cancelled) return;
@@ -89,18 +107,29 @@ export function DetectionOverlay({ video, eligible, generationKey, controlsTarge
         setStatus("AI berjalan di perangkat ini");
       } else if (event.data.type === "result" && Number(event.data.generation) === generation) {
         busyRef.current = false;
-        const resultLatency = Number(event.data.latencyMs);
+        const now = performance.now();
+        const resultLatency = now - capturedAt;
         setLatency(resultLatency);
+        setFps(previousResult ? 1000 / (now - previousResult) : 0);
+        previousResult = now;
         // busyRef prevents overlapping work; a short interval means the next inference uses
         // the newest decoded frame immediately instead of waiting behind stale frames.
         intervalRef.current = Math.max(100, Math.min(500, resultLatency * 0.25));
+        window.clearTimeout(expiryTimer);
+        if (document.hidden || video.paused) { clear(); return; }
+        const lifetime = remainingFrameLifetime(resultLatency, capturedMediaTime, video.currentTime * 1000);
+        if (!lifetime) {
+          clear();
+          setStatus("AI terlalu lambat; coba Nano atau precision lain. Box terlambat disembunyikan.");
+          return;
+        }
+        setState("running");
+        setStatus("AI berjalan di perangkat ini");
         setSourceSize({ width: Number(event.data.sourceWidth), height: Number(event.data.sourceHeight) });
         setDetections(event.data.detections as Detection[]);
-        setLastResultAt(Date.now());
+        expiryTimer = window.setTimeout(clear, lifetime);
       } else if (event.data.type === "error") {
-        busyRef.current = false;
-        setState("error");
-        setStatus(String(event.data.message));
+        fail(String(event.data.message));
       }
     };
 
@@ -117,7 +146,14 @@ export function DetectionOverlay({ video, eligible, generationKey, controlsTarge
       if (cancelled || !readyRef.current || document.hidden || video.paused || busyRef.current || mediaTimeMs - lastSampleRef.current < intervalRef.current) return;
       lastSampleRef.current = mediaTimeMs;
       busyRef.current = true;
-      createImageBitmap(video).then((bitmap) => worker.postMessage({ type: "infer", bitmap, sourceWidth: video.videoWidth, sourceHeight: video.videoHeight, generation, confidence: 0.35 }, [bitmap])).catch(() => { busyRef.current = false; });
+      capturedAt = performance.now();
+      capturedMediaTime = mediaTimeMs;
+      const sourceWidth = video.videoWidth;
+      const sourceHeight = video.videoHeight;
+      createImageBitmap(video).then((bitmap) => {
+        if (cancelled) { bitmap.close(); return; }
+        worker.postMessage({ type: "infer", bitmap, sourceWidth, sourceHeight, generation, confidence: 0.35 }, [bitmap]);
+      }).catch(() => { if (!cancelled) fail("Frame video tidak dapat dianalisis. Coba mulai AI lagi."); });
     };
     const sample = (_now: number, metadata: VideoFrameCallbackMetadata) => {
       if (cancelled) return;
@@ -127,13 +163,28 @@ export function DetectionOverlay({ video, eligible, generationKey, controlsTarge
     let fallbackTimer: number | null = null;
     if (typeof video.requestVideoFrameCallback === "function") callbackRef.current = video.requestVideoFrameCallback(sample);
     else fallbackTimer = window.setInterval(() => capture(video.currentTime * 1000), 250);
-    const visibility = () => { if (document.hidden) { clear(); setStatus("AI dijeda saat tab tersembunyi"); } };
+    const visibility = () => {
+      if (!readyRef.current) return;
+      clear();
+      previousResult = 0; setFps(0);
+      lastSampleRef.current = Number.NEGATIVE_INFINITY;
+      const paused = document.hidden || video.paused;
+      setState(paused ? "paused" : "running");
+      setStatus(paused ? "AI dijeda saat video atau tab tidak aktif" : "AI berjalan di perangkat ini");
+    };
     document.addEventListener("visibilitychange", visibility);
+    video.addEventListener("pause", visibility);
+    video.addEventListener("playing", visibility);
+    video.addEventListener("seeking", visibility);
     return () => {
       cancelled = true;
       if (callbackRef.current !== null) video.cancelVideoFrameCallback(callbackRef.current);
       if (fallbackTimer !== null) window.clearInterval(fallbackTimer);
       document.removeEventListener("visibilitychange", visibility);
+      video.removeEventListener("pause", visibility);
+      video.removeEventListener("playing", visibility);
+      video.removeEventListener("seeking", visibility);
+      window.clearTimeout(expiryTimer);
       worker.postMessage({ type: "dispose" });
       worker.terminate();
       workerRef.current = null;
@@ -141,10 +192,14 @@ export function DetectionOverlay({ video, eligible, generationKey, controlsTarge
       readyRef.current = false;
       clear();
     };
-  }, [enabled, eligible, video, generationKey, clear, selectedManifest]);
+  }, [enabled, eligible, video, generationKey, clear, activeManifest]);
 
   const counts = detections.reduce<Record<string, number>>((result, detection) => { const label = COCO_LABELS[detection.classId] ?? String(detection.classId); result[label] = (result[label] ?? 0) + 1; return result; }, {});
-  const toggle = () => { if (enabled) { setEnabled(false); setState("off"); setStatus("AI tidak aktif"); } else { setEnabled(true); } };
+  const apply = () => {
+    setAppliedModel(catalog?.models.find(({ manifest }) => manifest === selectedManifest)?.id ?? null);
+    setEnabled(true);
+  };
+  const toggle = () => { if (enabled) { setEnabled(false); setState("off"); setStatus("AI tidak aktif"); } else { apply(); } };
   const selectVariant = (variant: ModelVariant) => {
     setSelectedVariant(variant);
     if (!catalog?.models.some(({ manifest }) => manifest.variant === variant && manifest.precision === selectedPrecision)) {
@@ -154,11 +209,12 @@ export function DetectionOverlay({ video, eligible, generationKey, controlsTarge
   };
 
   return <>
-    <DetectionCanvas detections={detections} sourceSize={sourceSize} lastResultAt={lastResultAt} />
+    <DetectionCanvas detections={detections} sourceSize={sourceSize} />
     {controlsTarget && createPortal(<>
       <DetectionControls
         generationKey={generationKey} state={state} status={status} progress={progress}
-        provider={provider} latency={latency} counts={counts} catalog={catalog}
+        provider={provider} latency={latency} fps={fps} counts={counts} catalog={catalog}
+        pendingChange={enabled && selectedManifest !== activeManifest} onApply={apply}
         selectedVariant={selectedVariant} selectedPrecision={selectedPrecision}
         enabled={enabled} canEnable={Boolean(eligible && video && selectedManifest)}
         onVariantChange={selectVariant} onPrecisionChange={setSelectedPrecision} onToggle={toggle}

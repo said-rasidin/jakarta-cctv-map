@@ -5,10 +5,9 @@ import { COCO_LABELS, type Detection } from "@/features/detection/postprocess";
 
 const COLORS: Record<number, string> = { 0: "#38bdf8", 1: "#a78bfa", 2: "#34d399", 3: "#fbbf24", 5: "#fb7185", 7: "#f97316" };
 
-export function DetectionCanvas({ detections, sourceSize, lastResultAt }: {
+export function DetectionCanvas({ detections, sourceSize }: {
   detections: Detection[];
   sourceSize: { width: number; height: number };
-  lastResultAt: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -18,16 +17,17 @@ export function DetectionCanvas({ detections, sourceSize, lastResultAt }: {
     const draw = () => {
       const rect = canvas.getBoundingClientRect();
       const ratio = window.devicePixelRatio || 1;
-      canvas.width = Math.max(1, Math.round(rect.width * ratio));
-      canvas.height = Math.max(1, Math.round(rect.height * ratio));
+      const width = Math.max(1, Math.round(rect.width * ratio));
+      const height = Math.max(1, Math.round(rect.height * ratio));
+      if (canvas.width !== width) canvas.width = width;
+      if (canvas.height !== height) canvas.height = height;
       const context = canvas.getContext("2d");
       if (!context) return;
-      context.scale(ratio, ratio);
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
       context.clearRect(0, 0, rect.width, rect.height);
       const scale = Math.min(rect.width / sourceSize.width, rect.height / sourceSize.height);
       const offsetX = (rect.width - sourceSize.width * scale) / 2;
       const offsetY = (rect.height - sourceSize.height * scale) / 2;
-      context.globalAlpha = lastResultAt && Date.now() - lastResultAt > 2500 ? 0.3 : 1;
       context.font = "600 12px Arial";
       context.lineWidth = 2;
       for (const box of detections) {
@@ -49,9 +49,8 @@ export function DetectionCanvas({ detections, sourceSize, lastResultAt }: {
     draw();
     const observer = new ResizeObserver(draw);
     observer.observe(canvas);
-    const timer = window.setInterval(draw, 1000);
-    return () => { observer.disconnect(); window.clearInterval(timer); };
-  }, [detections, lastResultAt, sourceSize]);
+    return () => { observer.disconnect(); };
+  }, [detections, sourceSize]);
 
   return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />;
 }
