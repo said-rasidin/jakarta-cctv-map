@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { distanceInKm } from "@/domain/cameras/camera";
 import type { CameraDataset, CameraSite } from "@/domain/cameras/types";
 import { CameraViewer } from "@/features/cameras/components/camera-viewer";
@@ -70,6 +70,15 @@ export default function CameraExplorer({
     toggleAgency,
     resetFilters,
   } = useCameraFilters(dataset.sites, streamHealth, userLocation);
+  const totalChannels = useMemo(
+    () =>
+      dataset.sites.reduce((total, site) => total + site.channels.length, 0),
+    [dataset.sites],
+  );
+  const visibleChannels = useMemo(
+    () => ordered.reduce((total, site) => total + site.channels.length, 0),
+    [ordered],
+  );
   const choose = (site: CameraSite, channelId: string | null = null) => {
     setSelected(site);
     setSelectedChannelId(channelId);
@@ -98,7 +107,8 @@ export default function CameraExplorer({
           <div>
             <h1 className="font-semibold text-white">Peta CCTV Jakarta</h1>
             <p className="text-xs text-slate-400">
-              {dataset.sites.length} lokasi · diperbarui{" "}
+              {dataset.sites.length} lokasi · {totalChannels} titik CCTV ·
+              diperbarui{" "}
               {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
                 new Date(dataset.generatedAt),
               )}
@@ -145,7 +155,7 @@ export default function CameraExplorer({
         >
           {filtersOpen
             ? "Tutup filter & daftar"
-            : `Filter & daftar · ${ordered.length} lokasi`}
+            : `Filter & daftar · ${ordered.length} lokasi / ${visibleChannels} CCTV`}
         </button>
         <div
           id="camera-filters"
@@ -218,7 +228,8 @@ export default function CameraExplorer({
           )}
           <div className="mt-4 flex items-center justify-between">
             <p className="text-xs text-slate-400">
-              {ordered.length} CCTV · {groups.length} ruas/lokasi
+              {ordered.length} lokasi · {visibleChannels} titik CCTV ·{" "}
+              {groups.length} ruas/area
             </p>
             {(query ||
               agencies.size ||
@@ -251,7 +262,12 @@ export default function CameraExplorer({
                       {group.label}
                     </span>
                     <span className="text-xs text-slate-500">
-                      {group.sites.length} CCTV
+                      {group.sites.length} lokasi ·{" "}
+                      {group.sites.reduce(
+                        (total, site) => total + site.channels.length,
+                        0,
+                      )}{" "}
+                      CCTV
                       {userLocation
                         ? ` · ${distanceInKm(userLocation, group.sites[0].coordinates).toFixed(1)} km`
                         : ""}
