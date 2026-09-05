@@ -38,7 +38,8 @@ export function withinJakarta(lat: number, lng: number) {
 const GROUP_PREFIXES = /^(?:jk[ubpst]\s+)?(?:(?:satpol\s*pp|dishub|polda|polri|dbm|disgulkarmat|bakesbangpol)\s+)+/i;
 const CAMERA_SUFFIX = /(?:[-\s]+(?:c(?:ctv)?[-\s]*)?0*\d+)$/i;
 
-export function cameraGroup(site: Pick<CameraSite, "name" | "address">) {
+export function cameraGroup(site: Pick<CameraSite, "name" | "address" | "roadName">) {
+  if (site.roadName) return { key: normalizeText(site.roadName), label: site.roadName };
   const roadAddress = site.address?.split("(")[0].replace(/[.,]+$/, "").trim();
   const rawLabel = roadAddress && /^(?:jl\.?|jalan|simpang|flyover|jpo|tol)\b/i.test(roadAddress) ? roadAddress : site.name;
   const label = rawLabel.replace(GROUP_PREFIXES, "").replace(CAMERA_SUFFIX, "").replace(/\s+/g, " ").trim() || site.name;

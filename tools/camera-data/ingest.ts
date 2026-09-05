@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { normalizeCameraSite } from "../../src/domain/cameras/names";
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { normalizeText, withinJakarta } from "../../src/domain/cameras/camera";
@@ -177,7 +178,7 @@ async function main() {
         };
       }),
     };
-    sites.push(site);
+    sites.push(normalizeCameraSite(site));
   }
   const duplicateChannel = sites
     .flatMap((site) => site.channels)

@@ -38,14 +38,17 @@
             "lat": -6.207523,
             "lng": 106.803651,
             "source": "manual"
-          }
+          },
+          "roadName": "Bendungan Hilir"
         }
-      ]
+      ],
+      "sourceName": "Bendungan Hilir 003",
+      "roadName": "Bendungan Hilir"
     },
     {
       "id": "502535",
-      "name": "JKB SATPOL PP SIMPANG JL. LETJEN. S. PARMAN C07",
-      "normalizedName": "jkb satpol pp simpang jl letjen s parman c07",
+      "name": "Simpang Jl. Letjen S. Parman C07",
+      "normalizedName": "simpang jl letjen s parman c07",
       "district": "Palmerah",
       "areaCode": "JKB",
       "agency": "Satpol PP",
@@ -76,7 +79,8 @@
             "lat": -6.20102431069373,
             "lng": 106.79972526729782,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Letjen S. Parman"
         },
         {
           "id": "502535-cctv-02",
@@ -95,14 +99,17 @@
             "lat": -6.20102431069373,
             "lng": 106.79972526729782,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Letjen S. Parman"
         }
-      ]
+      ],
+      "sourceName": "JKB SATPOL PP SIMPANG JL. LETJEN. S. PARMAN C07",
+      "roadName": "Jl. Letjen S. Parman"
     },
     {
       "id": "502645",
-      "name": "JKB SATPOL PP SIMPANG JL. LETJEN. S. PARMAN C08",
-      "normalizedName": "jkb satpol pp simpang jl letjen s parman c08",
+      "name": "Simpang Jl. Letjen S. Parman C08",
+      "normalizedName": "simpang jl letjen s parman c08",
       "district": "Palmerah",
       "areaCode": "JKB",
       "agency": "Satpol PP",
@@ -133,7 +140,8 @@
             "lat": -6.202109355832687,
             "lng": 106.7994034896215,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Letjen S. Parman"
         },
         {
           "id": "502645-cctv-02",
@@ -152,14 +160,17 @@
             "lat": -6.202109355832687,
             "lng": 106.7994034896215,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Letjen S. Parman"
         }
-      ]
+      ],
+      "sourceName": "JKB SATPOL PP SIMPANG JL. LETJEN. S. PARMAN C08",
+      "roadName": "Jl. Letjen S. Parman"
     },
     {
       "id": "503536",
-      "name": "JKP DBM FLYOVER LADOKGI C01",
-      "normalizedName": "jkp dbm flyover ladokgi c01",
+      "name": "Flyover Ladokgi C01",
+      "normalizedName": "flyover ladokgi c01",
       "district": "Tanah Abang",
       "areaCode": "JKP",
       "agency": "DBM",
@@ -190,7 +201,8 @@
             "lat": -6.212333,
             "lng": 106.807052,
             "source": "manual"
-          }
+          },
+          "roadName": "Flyover Ladokgi"
         },
         {
           "id": "503536-cctv-02",
@@ -209,14 +221,17 @@
             "lat": -6.212333,
             "lng": 106.807052,
             "source": "manual"
-          }
+          },
+          "roadName": "Flyover Ladokgi"
         }
-      ]
+      ],
+      "sourceName": "JKP DBM FLYOVER LADOKGI C01",
+      "roadName": "Flyover Ladokgi"
     },
     {
       "id": "501844",
-      "name": "JKP DISHUB JL. MH. THAMRIN C01",
-      "normalizedName": "jkp dishub jl mh thamrin c01",
+      "name": "Jl. M.H. Thamrin C01",
+      "normalizedName": "jl m h thamrin c01",
       "district": "Menteng",
       "areaCode": "JKP",
       "agency": "Dishub",
@@ -228,7 +243,7 @@
         "lng": 106.8234,
         "source": "manual"
       },
-      "searchText": "501844 jkp dishub jl mh thamrin c01 menteng jkp dishub bali tower cctv 01 cctv 02",
+      "searchText": "501844 jkp dishub jl mh thamrin c01 menteng jkp dishub bali tower cctv 01 cctv 02 jl m h thamrin c01",
       "channels": [
         {
           "id": "501844-cctv-01",
@@ -247,7 +262,8 @@
             "lat": -6.195357,
             "lng": 106.823573,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         },
         {
           "id": "501844-cctv-02",
@@ -266,14 +282,17 @@
             "lat": -6.195365,
             "lng": 106.823639,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         }
-      ]
+      ],
+      "sourceName": "JKP DISHUB JL. MH. THAMRIN C01",
+      "roadName": "Jl. M.H. Thamrin"
     },
     {
       "id": "502155",
-      "name": "JKP POLDA JL. GERBANG PEMUDA C02",
-      "normalizedName": "jkp polda jl gerbang pemuda c02",
+      "name": "Jl. Gerbang Pemuda C02",
+      "normalizedName": "jl gerbang pemuda c02",
       "district": "Tanah Abang",
       "areaCode": "JKP",
       "agency": "Polda",
@@ -304,7 +323,8 @@
             "lat": -6.214393,
             "lng": 106.798516,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Gerbang Pemuda"
         },
         {
           "id": "502155-cctv-02",
@@ -323,14 +343,17 @@
             "lat": -6.214393,
             "lng": 106.798516,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Gerbang Pemuda"
         }
-      ]
+      ],
+      "sourceName": "JKP POLDA JL. GERBANG PEMUDA C02",
+      "roadName": "Jl. Gerbang Pemuda"
     },
     {
       "id": "502160",
-      "name": "JKP POLDA JL. GERBANG PEMUDA C03",
-      "normalizedName": "jkp polda jl gerbang pemuda c03",
+      "name": "Jl. Gerbang Pemuda C03",
+      "normalizedName": "jl gerbang pemuda c03",
       "district": "Tanah Abang",
       "areaCode": "JKP",
       "agency": "Polda",
@@ -339,7 +362,7 @@
       "catalogSource": "jakarta-public",
       "coordinates": {
         "lat": -6.213322,
-        "lng": 106.802250,
+        "lng": 106.80225,
         "source": "manual"
       },
       "searchText": "502160 jkp polda jl gerbang pemuda c03 tanah abang jkp polda bali tower cctv 01 cctv 02",
@@ -359,9 +382,10 @@
           },
           "coordinates": {
             "lat": -6.213322,
-            "lng": 106.802250,
+            "lng": 106.80225,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Gerbang Pemuda"
         },
         {
           "id": "502160-cctv-02",
@@ -378,16 +402,19 @@
           },
           "coordinates": {
             "lat": -6.213322,
-            "lng": 106.802250,
+            "lng": 106.80225,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Gerbang Pemuda"
         }
-      ]
+      ],
+      "sourceName": "JKP POLDA JL. GERBANG PEMUDA C03",
+      "roadName": "Jl. Gerbang Pemuda"
     },
     {
       "id": "503300",
-      "name": "JKP POLDA JL. JEND. GATOT SUBROTO C13",
-      "normalizedName": "jkp polda jl jend gatot subroto c13",
+      "name": "Jl. Jend. Gatot Subroto C13",
+      "normalizedName": "jl jend gatot subroto c13",
       "district": "Setiabudi",
       "areaCode": "JKP",
       "agency": "Polda",
@@ -418,7 +445,8 @@
             "lat": -6.207606,
             "lng": 106.803727,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jend. Gatot Subroto"
         },
         {
           "id": "503300-cctv-02",
@@ -437,14 +465,17 @@
             "lat": -6.207606,
             "lng": 106.803727,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jend. Gatot Subroto"
         }
-      ]
+      ],
+      "sourceName": "JKP POLDA JL. JEND. GATOT SUBROTO C13",
+      "roadName": "Jl. Jend. Gatot Subroto"
     },
     {
       "id": "503303",
-      "name": "JKP POLDA JL. JEND. GATOT SUBROTO C14",
-      "normalizedName": "jkp polda jl jend gatot subroto c14",
+      "name": "Jl. Jend. Gatot Subroto C14",
+      "normalizedName": "jl jend gatot subroto c14",
       "district": "Setiabudi",
       "areaCode": "JKP",
       "agency": "Polda",
@@ -452,8 +483,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.212980,
-        "lng": 106.807790,
+        "lat": -6.21298,
+        "lng": 106.80779,
         "source": "manual"
       },
       "searchText": "503303 jkp polda jl jend gatot subroto c14 setiabudi jkp polda bali tower cctv 01 cctv 02",
@@ -472,10 +503,11 @@
             "aiEligible": true
           },
           "coordinates": {
-            "lat": -6.212980,
-            "lng": 106.807790,
+            "lat": -6.21298,
+            "lng": 106.80779,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jend. Gatot Subroto"
         },
         {
           "id": "503303-cctv-02",
@@ -491,17 +523,20 @@
             "aiEligible": true
           },
           "coordinates": {
-            "lat": -6.212980,
-            "lng": 106.807790,
+            "lat": -6.21298,
+            "lng": 106.80779,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jend. Gatot Subroto"
         }
-      ]
+      ],
+      "sourceName": "JKP POLDA JL. JEND. GATOT SUBROTO C14",
+      "roadName": "Jl. Jend. Gatot Subroto"
     },
     {
       "id": "503301",
-      "name": "JKP POLDA JL. TENTARA PELAJAR C04",
-      "normalizedName": "jkp polda jl tentara pelajar c04",
+      "name": "Jl. Tentara Pelajar C04",
+      "normalizedName": "jl tentara pelajar c04",
       "district": "Kebayoran Lama",
       "areaCode": "JKP",
       "agency": "Polda",
@@ -532,7 +567,8 @@
             "lat": -6.218471,
             "lng": 106.791992,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Tentara Pelajar"
         },
         {
           "id": "503301-cctv-02",
@@ -551,14 +587,17 @@
             "lat": -6.210261518417967,
             "lng": 106.79639578465134,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Tentara Pelajar"
         }
-      ]
+      ],
+      "sourceName": "JKP POLDA JL. TENTARA PELAJAR C04",
+      "roadName": "Jl. Tentara Pelajar"
     },
     {
       "id": "502045",
-      "name": "JKP POLDA JPO JL. GATOT SUBROTO 7",
-      "normalizedName": "jkp polda jpo jl gatot subroto 7",
+      "name": "JPO Jl. Jend. Gatot Subroto 7",
+      "normalizedName": "jpo jl jend gatot subroto 7",
       "district": "Setiabudi",
       "areaCode": "JKP",
       "agency": "Polda",
@@ -570,7 +609,7 @@
         "lng": 106.803801,
         "source": "manual"
       },
-      "searchText": "502045 jkp polda jpo jl gatot subroto 7 setiabudi jkp polda bali tower cctv 01 cctv 02",
+      "searchText": "502045 jkp polda jpo jl gatot subroto 7 setiabudi jkp polda bali tower cctv 01 cctv 02 jpo jl jend gatot subroto 7",
       "channels": [
         {
           "id": "502045-cctv-01",
@@ -589,7 +628,8 @@
             "lat": -6.208592,
             "lng": 106.803801,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jend. Gatot Subroto"
         },
         {
           "id": "502045-cctv-02",
@@ -608,14 +648,17 @@
             "lat": -6.208592,
             "lng": 106.803801,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jend. Gatot Subroto"
         }
-      ]
+      ],
+      "sourceName": "JKP POLDA JPO JL. GATOT SUBROTO 7",
+      "roadName": "Jl. Jend. Gatot Subroto"
     },
     {
       "id": "504866",
-      "name": "JKP POLRI UOB PLAZA C01",
-      "normalizedName": "jkp polri uob plaza c01",
+      "name": "UOB Plaza C01",
+      "normalizedName": "uob plaza c01",
       "district": "Setiabudi",
       "areaCode": "JKP",
       "agency": "Polri",
@@ -646,7 +689,8 @@
             "lat": -6.199656,
             "lng": 106.822934,
             "source": "manual"
-          }
+          },
+          "roadName": "UOB Plaza"
         },
         {
           "id": "504866-cctv-02",
@@ -665,7 +709,8 @@
             "lat": -6.199656,
             "lng": 106.822934,
             "source": "manual"
-          }
+          },
+          "roadName": "UOB Plaza"
         },
         {
           "id": "504866-cctv-03",
@@ -684,14 +729,17 @@
             "lat": -6.199656,
             "lng": 106.822934,
             "source": "manual"
-          }
+          },
+          "roadName": "UOB Plaza"
         }
-      ]
+      ],
+      "sourceName": "JKP POLRI UOB PLAZA C01",
+      "roadName": "UOB Plaza"
     },
     {
       "id": "502506",
-      "name": "JKP SATPOL PP JL. GERBANG PEMUDA C04",
-      "normalizedName": "jkp satpol pp jl gerbang pemuda c04",
+      "name": "Jl. Gerbang Pemuda C04",
+      "normalizedName": "jl gerbang pemuda c04",
       "district": "Tanah Abang",
       "areaCode": "JKP",
       "agency": "Satpol PP",
@@ -722,7 +770,8 @@
             "lat": -6.212668,
             "lng": 106.807005,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Gerbang Pemuda"
         },
         {
           "id": "502506-cctv-02",
@@ -741,14 +790,17 @@
             "lat": -6.212668,
             "lng": 106.807005,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Gerbang Pemuda"
         }
-      ]
+      ],
+      "sourceName": "JKP SATPOL PP JL. GERBANG PEMUDA C04",
+      "roadName": "Jl. Gerbang Pemuda"
     },
     {
       "id": "502507",
-      "name": "JKP SATPOL PP JL. JEND. GATOT SUBROTO C11",
-      "normalizedName": "jkp satpol pp jl jend gatot subroto c11",
+      "name": "Jl. Jend. Gatot Subroto C11",
+      "normalizedName": "jl jend gatot subroto c11",
       "district": "Setiabudi",
       "areaCode": "JKP",
       "agency": "Satpol PP",
@@ -779,7 +831,8 @@
             "lat": -6.208793,
             "lng": 106.804018,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jend. Gatot Subroto"
         },
         {
           "id": "502507-cctv-02",
@@ -798,14 +851,17 @@
             "lat": -6.208793,
             "lng": 106.804018,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jend. Gatot Subroto"
         }
-      ]
+      ],
+      "sourceName": "JKP SATPOL PP JL. JEND. GATOT SUBROTO C11",
+      "roadName": "Jl. Jend. Gatot Subroto"
     },
     {
       "id": "502491",
-      "name": "JKP SATPOL PP SIMPANG JL. MH. THAMRIN C07",
-      "normalizedName": "jkp satpol pp simpang jl mh thamrin c07",
+      "name": "Simpang Jl. M.H. Thamrin C07",
+      "normalizedName": "simpang jl m h thamrin c07",
       "district": "Menteng",
       "areaCode": "JKP",
       "agency": "Satpol PP",
@@ -817,7 +873,7 @@
         "lng": 106.823248,
         "source": "manual"
       },
-      "searchText": "502491 jkp satpol pp simpang jl mh thamrin c07 menteng jkp satpol pp bali tower cctv 01 cctv 02",
+      "searchText": "502491 jkp satpol pp simpang jl mh thamrin c07 menteng jkp satpol pp bali tower cctv 01 cctv 02 simpang jl m h thamrin c07",
       "channels": [
         {
           "id": "502491-cctv-01",
@@ -833,10 +889,11 @@
             "aiEligible": true
           },
           "coordinates": {
-          "lat": -6.195706,
-          "lng": 106.823248,
+            "lat": -6.195706,
+            "lng": 106.823248,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         },
         {
           "id": "502491-cctv-02",
@@ -855,14 +912,17 @@
             "lat": -6.195706,
             "lng": 106.823248,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         }
-      ]
+      ],
+      "sourceName": "JKP SATPOL PP SIMPANG JL. MH. THAMRIN C07",
+      "roadName": "Jl. M.H. Thamrin"
     },
     {
       "id": "502492",
-      "name": "JKP SATPOL PP SIMPANG JL. MH. THAMRIN C08",
-      "normalizedName": "jkp satpol pp simpang jl mh thamrin c08",
+      "name": "Simpang Jl. M.H. Thamrin C08",
+      "normalizedName": "simpang jl m h thamrin c08",
       "district": "Menteng",
       "areaCode": "JKP",
       "agency": "Satpol PP",
@@ -874,7 +934,7 @@
         "lng": 106.822769,
         "source": "manual"
       },
-      "searchText": "502492 jkp satpol pp simpang jl mh thamrin c08 menteng jkp satpol pp bali tower cctv 01 cctv 02",
+      "searchText": "502492 jkp satpol pp simpang jl mh thamrin c08 menteng jkp satpol pp bali tower cctv 01 cctv 02 simpang jl m h thamrin c08",
       "channels": [
         {
           "id": "502492-cctv-01",
@@ -893,7 +953,8 @@
             "lat": -6.195605,
             "lng": 106.822769,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         },
         {
           "id": "502492-cctv-02",
@@ -912,14 +973,17 @@
             "lat": -6.194353,
             "lng": 106.823435,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         }
-      ]
+      ],
+      "sourceName": "JKP SATPOL PP SIMPANG JL. MH. THAMRIN C08",
+      "roadName": "Jl. M.H. Thamrin"
     },
     {
       "id": "502493",
-      "name": "JKP SATPOL PP SIMPANG JL. MH. THAMRIN C09",
-      "normalizedName": "jkp satpol pp simpang jl mh thamrin c09",
+      "name": "Simpang Jl. M.H. Thamrin C09",
+      "normalizedName": "simpang jl m h thamrin c09",
       "district": "Menteng",
       "areaCode": "JKP",
       "agency": "Satpol PP",
@@ -928,10 +992,10 @@
       "catalogSource": "jakarta-public",
       "coordinates": {
         "lat": -6.195516,
-        "lng":  106.822721,
+        "lng": 106.822721,
         "source": "manual"
       },
-      "searchText": "502493 jkp satpol pp simpang jl mh thamrin c09 menteng jkp satpol pp bali tower cctv 01 cctv 02",
+      "searchText": "502493 jkp satpol pp simpang jl mh thamrin c09 menteng jkp satpol pp bali tower cctv 01 cctv 02 simpang jl m h thamrin c09",
       "channels": [
         {
           "id": "502493-cctv-01",
@@ -948,9 +1012,10 @@
           },
           "coordinates": {
             "lat": -6.195516,
-            "lng":  106.822721,
+            "lng": 106.822721,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         },
         {
           "id": "502493-cctv-02",
@@ -967,16 +1032,19 @@
           },
           "coordinates": {
             "lat": -6.195516,
-            "lng":  106.822721,
+            "lng": 106.822721,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         }
-      ]
+      ],
+      "sourceName": "JKP SATPOL PP SIMPANG JL. MH. THAMRIN C09",
+      "roadName": "Jl. M.H. Thamrin"
     },
     {
       "id": "501941",
-      "name": "JKP SATPOLPP JL. MH. THAMRIN C02",
-      "normalizedName": "jkp satpolpp jl mh thamrin c02",
+      "name": "Jl. M.H. Thamrin C02",
+      "normalizedName": "jl m h thamrin c02",
       "district": "Menteng",
       "areaCode": "JKP",
       "agency": "Satpol PP",
@@ -988,7 +1056,7 @@
         "lng": 106.823622,
         "source": "manual"
       },
-      "searchText": "501941 jkp satpolpp jl mh thamrin c02 menteng jkp satpol pp bali tower cctv 01 cctv 02",
+      "searchText": "501941 jkp satpolpp jl mh thamrin c02 menteng jkp satpol pp bali tower cctv 01 cctv 02 jl m h thamrin c02",
       "channels": [
         {
           "id": "501941-cctv-01",
@@ -1007,7 +1075,8 @@
             "lat": -6.195314,
             "lng": 106.823622,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         },
         {
           "id": "501941-cctv-02",
@@ -1026,13 +1095,16 @@
             "lat": -6.195368,
             "lng": 106.823603,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. M.H. Thamrin"
         }
-      ]
+      ],
+      "sourceName": "JKP SATPOLPP JL. MH. THAMRIN C02",
+      "roadName": "Jl. M.H. Thamrin"
     },
     {
       "id": "503675",
-      "name": "Jl. Jati Baru Raya-C02",
+      "name": "Jl. Jati Baru Raya C02",
       "normalizedName": "jl jati baru raya c02",
       "district": "Tanah Abang",
       "areaCode": "JKP",
@@ -1064,7 +1136,8 @@
             "lat": -6.185732,
             "lng": 106.811199,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jati Baru Raya"
         },
         {
           "id": "503675-cctv-02",
@@ -1083,14 +1156,17 @@
             "lat": -6.185732,
             "lng": 106.811199,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Jati Baru Raya"
         }
-      ]
+      ],
+      "sourceName": "Jl. Jati Baru Raya-C02",
+      "roadName": "Jl. Jati Baru Raya"
     },
     {
       "id": "503343",
-      "name": "Jl. KH. Mas Mansyur-C02",
-      "normalizedName": "jl kh mas mansyur c02",
+      "name": "JPO Jl. Cideng Timur C02",
+      "normalizedName": "jpo jl cideng timur c02",
       "district": "Gambir",
       "areaCode": "JKP",
       "agency": "DBM",
@@ -1102,7 +1178,7 @@
         "lng": 106.814782,
         "source": "manual"
       },
-      "searchText": "503343 jl kh mas mansyur c02 gambir jkp dbm bali tower cctv 01 cctv 02",
+      "searchText": "503343 jl kh mas mansyur c02 gambir jkp dbm bali tower cctv 01 cctv 02 jpo jl cideng timur c02",
       "channels": [
         {
           "id": "503343-cctv-01",
@@ -1121,7 +1197,8 @@
             "lat": -6.185086,
             "lng": 106.814782,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Cideng Timur"
         },
         {
           "id": "503343-cctv-02",
@@ -1140,14 +1217,17 @@
             "lat": -6.184996,
             "lng": 106.814914,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Cideng Timur"
         }
-      ]
+      ],
+      "sourceName": "Jl. KH. Mas Mansyur-C02",
+      "roadName": "Jl. Cideng Timur"
     },
     {
       "id": "501594",
-      "name": "Jl. Sultan Agung-C03",
-      "normalizedName": "jl sultan agung c03",
+      "name": "Jl. Manggarai Utara 2 C01",
+      "normalizedName": "jl manggarai utara 2 c01",
       "district": "Setiabudi",
       "areaCode": "JKS",
       "agency": "Disgulkarmat",
@@ -1159,7 +1239,7 @@
         "lng": 106.84985007270394,
         "source": "manual"
       },
-      "searchText": "501594 jl sultan agung c03 setiabudi jks disgulkarmat bali tower cctv 01",
+      "searchText": "501594 jl sultan agung c03 setiabudi jks disgulkarmat bali tower cctv 01 jl manggarai utara 2 c01",
       "channels": [
         {
           "id": "501594-cctv-01",
@@ -1178,9 +1258,12 @@
             "lat": -6.209280359948067,
             "lng": 106.84985007270394,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Manggarai Utara 2"
         }
-      ]
+      ],
+      "sourceName": "Jl. Sultan Agung-C03",
+      "roadName": "Jl. Manggarai Utara 2"
     },
     {
       "id": "700332",
@@ -1216,14 +1299,17 @@
             "lat": -6.197830324587427,
             "lng": 106.8234818153728,
             "source": "manual"
-          }
+          },
+          "roadName": "Kebon Melati"
         }
-      ]
+      ],
+      "sourceName": "Kebon Melati 010",
+      "roadName": "Kebon Melati"
     },
     {
       "id": "502540",
-      "name": "Pasar Tanah Abang-C02",
-      "normalizedName": "pasar tanah abang c02",
+      "name": "Simpang Jl. Letjen S. Parman C02",
+      "normalizedName": "simpang jl letjen s parman c02",
       "district": "Tanah Abang",
       "areaCode": "JKB",
       "agency": "Satpol PP",
@@ -1235,7 +1321,7 @@
         "lng": 106.79623139600912,
         "source": "manual"
       },
-      "searchText": "502540 pasar tanah abang c02 tanah abang jkb satpol pp bali tower cctv 01 cctv 02",
+      "searchText": "502540 simpang letjen s parman bali tower cctv 01 cctv 02 simpang jl letjen s parman c02",
       "channels": [
         {
           "id": "502540-cctv-01",
@@ -1254,7 +1340,8 @@
             "lat": -6.179062018610752,
             "lng": 106.79623139600912,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Letjen S. Parman"
         },
         {
           "id": "502540-cctv-02",
@@ -1273,9 +1360,12 @@
             "lat": -6.179062018610752,
             "lng": 106.79623139600912,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Letjen S. Parman"
         }
-      ]
+      ],
+      "sourceName": "simpang letjen s parman",
+      "roadName": "Jl. Letjen S. Parman"
     },
     {
       "id": "705084",
@@ -1311,9 +1401,12 @@
             "lat": -6.229487623632896,
             "lng": 106.80002874551731,
             "source": "manual"
-          }
+          },
+          "roadName": "Senayan"
         }
-      ]
+      ],
+      "sourceName": "Senayan 001",
+      "roadName": "Senayan"
     },
     {
       "id": "705979",
@@ -1349,7 +1442,8 @@
             "lat": -6.22353715828922,
             "lng": 106.80694121615903,
             "source": "manual"
-          }
+          },
+          "roadName": "Senayan"
         },
         {
           "id": "705979-cctv-3",
@@ -1368,14 +1462,17 @@
             "lat": -6.22353715828922,
             "lng": 106.80694121615903,
             "source": "manual"
-          }
+          },
+          "roadName": "Senayan"
         }
-      ]
+      ],
+      "sourceName": "Senayan 018",
+      "roadName": "Senayan"
     },
     {
       "id": "501493",
-      "name": "Simpang Jl. H. Fachrudin Tanah Abang-C01",
-      "normalizedName": "simpang jl H. Fachrudin Tanah Abang c01",
+      "name": "Pasar Tanah Abang C01",
+      "normalizedName": "pasar tanah abang c01",
       "district": "Kebayoran Baru",
       "areaCode": "JKP",
       "agency": "Satpol PP",
@@ -1387,9 +1484,9 @@
         "lng": 106.81343125667587,
         "source": "manual"
       },
-      "searchText": "501493 simpang jl H. Fachrudin Tanah Abang",
+      "searchText": "501493 simpang jl h fachrudin tanah abang simpang jl h fachrudin tanah abang c01 pasar tanah abang c01",
       "channels": [
-          {
+        {
           "id": "501493-cctv-01",
           "label": "CCTV-01",
           "embedUrl": "https://dki-jkt.balitower.co.id:7028/501493_JKP_SATPOLPP_PASAR-TANAH-ABANG-C01_CCTV-01/embed.html",
@@ -1406,7 +1503,8 @@
             "lat": -6.188501816283913,
             "lng": 106.81343125667587,
             "source": "manual"
-          }
+          },
+          "roadName": "Pasar Tanah Abang"
         },
         {
           "id": "501493-cctv-02",
@@ -1425,14 +1523,17 @@
             "lat": -6.188501816283913,
             "lng": 106.81343125667587,
             "source": "manual"
-          }
+          },
+          "roadName": "Pasar Tanah Abang"
         }
-      ]
+      ],
+      "sourceName": "Simpang Jl. H. Fachrudin Tanah Abang-C01",
+      "roadName": "Pasar Tanah Abang"
     },
     {
       "id": "501862",
-      "name": "Simpang Jl. Letjen S. Parman",
-      "normalizedName": "simpang letjen s parman",
+      "name": "Jl. Letjen S. Parman C01",
+      "normalizedName": "jl letjen s parman c01",
       "district": "Setiabudi",
       "areaCode": "JKB",
       "agency": "Dishub",
@@ -1444,7 +1545,7 @@
         "lng": 106.79656590717552,
         "source": "manual"
       },
-      "searchText": "501862 simpang letjen s parman bali tower cctv 01 cctv 03",
+      "searchText": "501862 simpang letjen s parman bali tower cctv 01 cctv 03 simpang jl letjen s parman jl letjen s parman c01",
       "channels": [
         {
           "id": "501862-cctv-01",
@@ -1463,7 +1564,8 @@
             "lat": -6.179587715587482,
             "lng": 106.79656590717552,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Letjen S. Parman"
         },
         {
           "id": "501862-cctv-03",
@@ -1482,14 +1584,17 @@
             "lat": -6.179587715587482,
             "lng": 106.79656590717552,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. Letjen S. Parman"
         }
-      ]
+      ],
+      "sourceName": "Simpang Jl. Letjen S. Parman",
+      "roadName": "Jl. Letjen S. Parman"
     },
     {
       "id": "502041",
-      "name": "Jl. K.H. Mas Mansyur",
-      "normalizedName": "jl k h mas mansyur",
+      "name": "Jl. K.H. Mas Mansyur C01",
+      "normalizedName": "jl k h mas mansyur c01",
       "district": "Setiabudi",
       "areaCode": "JKP",
       "agency": "Polda",
@@ -1501,9 +1606,9 @@
         "lng": 106.81559988920007,
         "source": "manual"
       },
-      "searchText": "502041 jl k h mas mansyur bali tower cctv 02",
+      "searchText": "502041 jl k h mas mansyur bali tower cctv 02 jl k h mas mansyur c01",
       "channels": [
-         {
+        {
           "id": "502041-cctv-01",
           "label": "CCTV-01",
           "embedUrl": "https://dki-jkt.balitower.co.id:7028/502041_JKP_POLDA_JL.-KH.-MAS-MANSYUR-C01_CCTV-01/embed.html",
@@ -1520,7 +1625,8 @@
             "lat": -6.1856455067199185,
             "lng": 106.81559988920007,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. K.H. Mas Mansyur"
         },
         {
           "id": "502041-cctv-02",
@@ -1539,13 +1645,16 @@
             "lat": -6.1856455067199185,
             "lng": 106.81559988920007,
             "source": "manual"
-          }
+          },
+          "roadName": "Jl. K.H. Mas Mansyur"
         }
-      ]
+      ],
+      "sourceName": "Jl. K.H. Mas Mansyur",
+      "roadName": "Jl. K.H. Mas Mansyur"
     },
     {
       "id": "501478",
-      "name": "Taman Literasi-C01",
+      "name": "Taman Literasi C01",
       "normalizedName": "taman literasi c01",
       "district": "Kebayoran Baru",
       "areaCode": "JKS",
@@ -1554,7 +1663,7 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat":-6.2426624363448235,
+        "lat": -6.2426624363448235,
         "lng": 106.79866450938083,
         "source": "manual"
       },
@@ -1574,12 +1683,15 @@
             "aiEligible": true
           },
           "coordinates": {
-            "lat":-6.2426624363448235,
+            "lat": -6.2426624363448235,
             "lng": 106.79866450938083,
             "source": "manual"
-          }
+          },
+          "roadName": "Taman Literasi"
         }
-      ]
+      ],
+      "sourceName": "Taman Literasi-C01",
+      "roadName": "Taman Literasi"
     }
   ]
 }

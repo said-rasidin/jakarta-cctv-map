@@ -10,6 +10,7 @@ export type CameraPlayback = {
 };
 
 export type CameraChannel = {
+  roadName?: string;
   id: string;
   label: string;
   coordinates: { lat: number; lng: number; source: CoordinateSource };
@@ -19,6 +20,8 @@ export type CameraChannel = {
 };
 
 export type CameraSite = {
+  sourceName?: string;
+  roadName?: string;
   id: string;
   name: string;
   normalizedName: string;
