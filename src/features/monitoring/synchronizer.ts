@@ -51,7 +51,11 @@ export class Synchronizer {
     }
     for (const id of this.previous.keys())
       if (!controllers.has(id)) this.previous.delete(id);
-    const window = commonWindow(eligible.map(({ sample }) => sample.ranges));
+    const times = eligible.map(
+      ({ sample }) => sample.time! + now - sample.sampledAt,
+    );
+    const slowest = Math.min(...times);
+    const window = commonWindow(eligible.map(({ sample }) => sample.ranges), slowest);
     if (eligible.length < 2 || !window) {
       this.anchor = null;
       eligible.forEach(({ controller }) => {
@@ -61,7 +65,7 @@ export class Synchronizer {
       return {
         message:
           eligible.length < 2
-            ? "Menunggu minimal 2 kamera dengan waktu terverifikasi"
+            ? "Menunggu metadata waktu dari minimal 2 kamera"
             : "Tidak ada rentang waktu bersama",
         members: [] as string[],
       };
@@ -77,12 +81,12 @@ export class Synchronizer {
       target < window.start ||
       target >= window.end
     ) {
-      target = window.end - Math.min(500, (window.end - window.start) / 2);
+      // Start at the slowest advancing camera, bounded by a time every member
+      // can actually seek to. Do not recompute min every tick: it causes chasing.
+      const safeEnd = window.end - Math.min(500, (window.end - window.start) / 2);
+      target = Math.max(window.start, Math.min(slowest, safeEnd));
       this.anchor = { time: target, mono: now, members };
     }
-    const times = eligible.map(
-      ({ sample }) => sample.time! + now - sample.sampledAt,
-    );
     eligible.forEach(({ id, controller }, i) => {
       controller.setAligned(true);
       const drift = times[i] - target;

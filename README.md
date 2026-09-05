@@ -55,10 +55,12 @@ Create a personal monitoring workspace for several points along a road, corridor
 ### How to monitor several cameras
 
 1. From a map popup, camera viewer, or road group, choose **Tambah ke monitor** for each channel you want.
-2. Open **Buka monitor**.
+2. Open **Buka monitor**. Choose **Atur** to add cameras, edit the name, save, change layout or arrange the tiles. An empty workspace opens these settings automatically.
 3. Optionally filter the workspace to a standardised road name, then choose **Mulai monitor**.
 4. Drag a tile's **↕** handle onto another tile (mouse or touch), or focus the handle and use the arrow keys. **Atur utara → selatan** sorts geographically; **Balik urutan** reverses the current layout. The current direction and numbered list update immediately. Geographic order does not describe the camera's viewing direction.
-5. Save one named layout locally in your browser and return to it later.
+5. Save one named layout locally in your browser and return to it later. **Mulai monitor** closes settings and expands the grid; **Atur** reopens them without restarting the streams.
+
+While watching, the toolbar shows one group timing status. Open it for timing details and excluded cameras. **Fokus** enlarges a camera; **Opsi kamera** contains fullscreen, retry, ordering, replacement/removal and source information. AI remains an explicit opt-in inside the focused view. The numbered order list and instructions are under **Daftar & bantuan urutan** in arrangement mode.
 
 | Layout | Best for | Notes |
 | --- | --- | --- |
@@ -72,7 +74,7 @@ Before starting or while paused, visible tiles request a single `preview.jpg` di
 
 The navy/blue interface and orange accents are inspired by [the official +Jakarta color identity](https://www.jakarta.go.id/informasi-kolaborasi) (Biru Abang and Jingga Bis Kota), with interface-specific shades. This is not an official Jakarta government application.
 
-**Live timing:** Choose **Terbaru** to follow each stream's own live edge. **Selaraskan waktu** can delay faster HLS streams when compatible timing information is available; it is best-effort and does not prove that a camera clock or on-screen timestamp is correct.
+**Live timing:** **Sinkron otomatis** runs by default while monitoring is visible. It starts from the slowest advancing HLS program time within the shared playable buffer, then adjusts faster players in the background. Stalled cameras or streams without usable metadata are excluded; synchronization is best-effort, not proof that source clocks or on-screen timestamps are correct. **Terbaru** is a manual opt-out. **Ke siaran terbaru** resets playback toward live without disabling automatic sync. Hidden tabs still release playback resources.
 
 ## Optional AI: object-detection experiment
 

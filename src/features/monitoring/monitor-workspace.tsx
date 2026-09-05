@@ -37,7 +37,9 @@ export function MonitorWorkspace({
   const [mobile, setMobile] = useState(true);
   const [page, setPage] = useState(0);
   const [query, setQuery] = useState("");
-  const [pickerOpen, setPickerOpen] = useState(true);
+  const [pickerOpen, setPickerOpen] = useState(
+    workspace.channelIds.length === 0,
+  );
   const [road, setRoad] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [replaceId, setReplaceId] = useState<string | null>(null);
@@ -45,7 +47,7 @@ export function MonitorWorkspace({
   const [audioId, setAudioId] = useState<string | null>(null);
   const [dragTarget, setDragTarget] = useState<string | null>(null);
   const [orderNotice, setOrderNotice] = useState("");
-  const [mode, setMode] = useState<"live" | "aligned">("live");
+  const [mode, setMode] = useState<"live" | "aligned">("aligned");
   const [sync, setSync] = useState({ message: "", members: [] as string[] });
   const controllers = useRef(new Map<string, PlayerController>());
   const coordinator = useRef(new Synchronizer());
@@ -128,7 +130,6 @@ export function MonitorWorkspace({
   }, [mode, running, visible, currentPage, capacity]);
   const live = () => {
     coordinator.current.reset(controllers.current);
-    setMode("live");
     controllers.current.forEach((c) => c.goLive());
   };
   const orderLabel = geographicOrder(
@@ -154,6 +155,20 @@ export function MonitorWorkspace({
       setReplaceId(null);
     } else onChange(addChannel(workspace, id));
   };
+  const syncCount = activeIds.filter((id) => sync.members.includes(id)).length;
+  const syncLabel = !running
+    ? "Dijeda"
+    : !visible
+      ? "Tab dijeda"
+      : mode === "live"
+        ? "Waktu terpisah"
+        : syncCount < 2
+          ? "Menunggu waktu"
+          : !sync.message.startsWith("Selaras menurut metadata")
+            ? "Menyelaraskan"
+            : syncCount < activeIds.length
+              ? `Sinkron sebagian ${syncCount}/${activeIds.length}`
+              : `Sinkron ${syncCount}/${activeIds.length}`;
   return (
     <Dialog.Root
       open
@@ -164,87 +179,124 @@ export function MonitorWorkspace({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/70" />
         <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-slate-950 p-3 text-white outline-none md:p-5">
-          <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <Dialog.Title className="text-xl font-semibold">
-                Monitor lalu lintas
+          <header className="sticky -top-3 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 bg-slate-950/95 py-2 backdrop-blur md:-top-5">
+            <div className="min-w-0 basis-full md:flex-1 md:basis-auto">
+              <Dialog.Title
+                className="truncate text-lg font-semibold"
+                title={workspace.name}
+              >
+                {workspace.name || "Monitor lalu lintas"}
               </Dialog.Title>
-              <Dialog.Description className="text-sm text-slate-400">
+              <Dialog.Description className="sr-only">
                 Pilih kamera, atur urutan ruas, lalu mulai pemantauan.
               </Dialog.Description>
+              <span className="text-xs text-slate-400">
+                {workspace.channelIds.length} kamera
+              </span>
             </div>
-            <Dialog.Close className={monitorButton}>
-              Kembali ke peta
-            </Dialog.Close>
-          </header>
-          <div className="mb-4 flex flex-wrap items-end gap-2">
-            <label className="min-w-48 flex-1 text-xs text-slate-300">
-              Nama susunan
-              <input
-                aria-label="Nama susunan"
-                value={workspace.name}
-                maxLength={100}
-                onChange={(e) =>
-                  onChange({ ...workspace, name: e.target.value })
-                }
-                className="mt-1 block min-h-11 w-full rounded-lg border border-slate-600 bg-slate-900 px-3 text-sm text-white"
-              />
-            </label>
-            <button className={monitorButton} onClick={onSave}>
-              Simpan susunan
+            <details className="relative">
+              <summary
+                className={`${monitorButton} cursor-pointer text-sky-200`}
+              >
+                <span role="status">{syncLabel}</span> ⓘ
+              </summary>
+              <div className="absolute right-0 top-full z-30 mt-2 w-[min(320px,85vw)] rounded-xl border border-slate-600 bg-slate-900 p-4 text-sm shadow-xl">
+                <p className="font-semibold">Detail waktu</p>
+                <p className="my-2 tabular-nums">
+                  {running ? sync.message : "Video belum dimulai / dijeda."}
+                </p>
+                <p className="text-xs text-slate-300">
+                  Sinkron mengikuti metadata sumber dan dapat menambah delay.
+                  Jam CCTV belum tentu benar. Preview bukan siaran langsung dan
+                  waktu gambarnya tidak terverifikasi.
+                </p>
+                {running &&
+                  activeIds
+                    .filter((id) => !sync.members.includes(id))
+                    .map((id) => (
+                      <p key={id} className="mt-2 text-xs">
+                        Belum dalam grup: {byId.get(id)?.site.name ?? id} ·{" "}
+                        {byId.get(id)?.channel.label}
+                      </p>
+                    ))}
+              </div>
+            </details>
+            <button
+              className={monitorButton}
+              aria-expanded={pickerOpen}
+              aria-controls="monitor-settings"
+              onClick={() => setPickerOpen((value) => !value)}
+            >
+              {pickerOpen ? "Selesai mengatur" : "Atur"}
             </button>
             <button
               className="min-h-11 rounded-lg bg-jakarta-orange px-4 py-2 text-sm font-semibold text-slate-950 hover:brightness-110 disabled:opacity-40"
               disabled={!workspace.channelIds.length}
               onClick={() => {
-                if (!running && mobile) setPickerOpen(false);
+                if (!running) setPickerOpen(false);
                 setRunning((v) => !v);
               }}
             >
               {running ? "Jeda semua" : "Mulai monitor"}
             </button>
-            <button
-              className={monitorButton}
-              disabled={!running}
-              onClick={live}
-            >
-              Ke siaran terbaru
-            </button>
-            <label className="text-xs text-slate-300">
-              Layout desktop
-              <select
-                aria-label="Layout desktop"
-                className={`ml-2 bg-slate-900 ${monitorButton}`}
-                value={workspace.layout}
-                onChange={(e) => {
-                  onChange({
-                    ...workspace,
-                    layout: Number(e.target.value) as 2 | 4 | 6,
-                  });
-                  setPage(0);
-                }}
+            <Dialog.Close className={monitorButton}>
+              Kembali ke peta
+            </Dialog.Close>
+          </header>
+          <div id="monitor-settings" hidden={!pickerOpen}>
+            <div className="mb-4 flex flex-wrap items-end gap-2 rounded-xl border border-slate-700 bg-slate-900 p-3">
+              <label className="min-w-48 flex-1 text-xs text-slate-300">
+                Nama susunan
+                <input
+                  aria-label="Nama susunan"
+                  value={workspace.name}
+                  maxLength={100}
+                  onChange={(e) =>
+                    onChange({ ...workspace, name: e.target.value })
+                  }
+                  className="mt-1 block min-h-11 w-full rounded-lg border border-slate-600 bg-slate-900 px-3 text-sm text-white"
+                />
+              </label>
+              <button className={monitorButton} onClick={onSave}>
+                Simpan susunan
+              </button>
+              <button
+                className={monitorButton}
+                disabled={!running}
+                onClick={live}
               >
-                <option value={2}>2 kamera</option>
-                <option value={4}>4 kamera</option>
-                <option value={6}>6 kamera (eksperimental)</option>
-              </select>
-            </label>
+                Ke siaran terbaru
+              </button>
+              <label className="text-xs text-slate-300">
+                Layout desktop
+                <select
+                  aria-label="Layout desktop"
+                  className={`ml-2 bg-slate-900 ${monitorButton}`}
+                  value={workspace.layout}
+                  onChange={(e) => {
+                    onChange({
+                      ...workspace,
+                      layout: Number(e.target.value) as 2 | 4 | 6,
+                    });
+                    setPage(0);
+                  }}
+                >
+                  <option value={2}>2 kamera</option>
+                  <option value={4}>4 kamera</option>
+                  <option value={6}>6 kamera (eksperimental)</option>
+                </select>
+              </label>
+            </div>
+            <p role="status" className="mb-3 text-sm text-sky-200">
+              {notice}
+            </p>
           </div>
-          <p role="status" className="mb-3 text-sm text-sky-200">
-            {notice}
-          </p>
-          <button
-            className={`${monitorButton} mb-3 lg:hidden`}
-            aria-expanded={pickerOpen}
-            aria-controls="monitor-picker"
-            onClick={() => setPickerOpen((value) => !value)}
+          <div
+            className={`grid gap-4 ${pickerOpen ? "lg:grid-cols-[280px_minmax(0,1fr)]" : ""}`}
           >
-            {pickerOpen ? "Tutup daftar kamera" : "Tambah / ganti kamera"}
-          </button>
-          <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
             <aside
               id="monitor-picker"
-              className={`${pickerOpen ? "block" : "hidden"} rounded-xl border border-slate-700 bg-slate-900 p-3 lg:block`}
+              className={`${pickerOpen ? "block" : "hidden"} rounded-xl border border-slate-700 bg-slate-900 p-3`}
             >
               <h2 className="mb-2 font-semibold">
                 {replaceId
@@ -337,96 +389,93 @@ export function MonitorWorkspace({
               </div>
             </aside>
             <section className="min-w-0" aria-label="Grid monitor">
-              <div className="mb-3 flex flex-wrap gap-2">
-                <button
-                  className={monitorButton}
-                  disabled={workspace.channelIds.length < 2}
-                  onClick={() => {
-                    setOrderNotice("Susunan diatur dari utara ke selatan.");
-                    onChange({
-                      ...workspace,
-                      channelIds: [...workspace.channelIds].sort(
-                        (a, b) =>
-                          (byId.get(b)?.channel.coordinates.lat ?? -Infinity) -
-                          (byId.get(a)?.channel.coordinates.lat ?? -Infinity),
-                      ),
-                    });
-                  }}
-                >
-                  Atur utara → selatan
-                </button>
-                <button
-                  className={monitorButton}
-                  disabled={workspace.channelIds.length < 2}
-                  onClick={() => {
-                    setOrderNotice(
-                      "Urutan dibalik. Nomor tile dan daftar urutan telah diperbarui.",
-                    );
-                    onChange({
-                      ...workspace,
-                      channelIds: [...workspace.channelIds].reverse(),
-                    });
-                  }}
-                >
-                  Balik urutan
-                </button>
-                <label className="text-sm">
-                  Waktu
-                  <select
-                    aria-label="Mode waktu"
-                    value={mode}
-                    onChange={(e) =>
-                      e.target.value === "live" ? live() : setMode("aligned")
-                    }
-                    className={`ml-2 bg-slate-900 ${monitorButton}`}
+              <div hidden={!pickerOpen}>
+                <div className="mb-3 flex flex-wrap gap-2">
+                  <button
+                    className={monitorButton}
+                    disabled={workspace.channelIds.length < 2}
+                    onClick={() => {
+                      setOrderNotice("Susunan diatur dari utara ke selatan.");
+                      onChange({
+                        ...workspace,
+                        channelIds: [...workspace.channelIds].sort(
+                          (a, b) =>
+                            (byId.get(b)?.channel.coordinates.lat ??
+                              -Infinity) -
+                            (byId.get(a)?.channel.coordinates.lat ?? -Infinity),
+                        ),
+                      });
+                    }}
                   >
-                    <option value="live">Terbaru</option>
-                    <option value="aligned">Selaraskan waktu</option>
-                  </select>
-                </label>
+                    Atur utara → selatan
+                  </button>
+                  <button
+                    className={monitorButton}
+                    disabled={workspace.channelIds.length < 2}
+                    onClick={() => {
+                      setOrderNotice(
+                        "Urutan dibalik. Nomor tile dan daftar urutan telah diperbarui.",
+                      );
+                      onChange({
+                        ...workspace,
+                        channelIds: [...workspace.channelIds].reverse(),
+                      });
+                    }}
+                  >
+                    Balik urutan
+                  </button>
+                  <label className="text-sm">
+                    Waktu
+                    <select
+                      aria-label="Mode waktu"
+                      value={mode}
+                      onChange={(e) => {
+                        setMode(e.target.value as "live" | "aligned");
+                        if (e.target.value === "live") live();
+                      }}
+                      className={`ml-2 bg-slate-900 ${monitorButton}`}
+                    >
+                      <option value="live">Terbaru</option>
+                      <option value="aligned">Sinkron otomatis</option>
+                    </select>
+                  </label>
+                </div>
+                <p role="status" className="mb-2 text-sm text-sky-200">
+                  Urutan saat ini: <strong>{orderLabel}</strong>. {orderNotice}
+                </p>
+                <details>
+                  <summary className="min-h-11 cursor-pointer py-3 text-sm text-slate-300">
+                    Daftar & bantuan urutan
+                  </summary>
+                  <ol
+                    aria-label="Urutan kamera saat ini"
+                    className="mb-3 flex flex-wrap gap-2"
+                  >
+                    {workspace.channelIds.map((id, index) => (
+                      <li
+                        key={id}
+                        className="rounded-lg border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
+                      >
+                        <span className="font-bold text-jakarta-orange">
+                          {index + 1}.
+                        </span>{" "}
+                        {byId.get(id)?.site.name ?? "Kamera tidak tersedia"} ·{" "}
+                        {byId.get(id)?.channel.label ?? id}
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="mb-2 text-xs text-slate-400">
+                    Seret pegangan ↕ ke tile tujuan untuk mengatur layout (mouse
+                    / sentuhan), atau fokuskan pegangan dan gunakan tombol
+                    panah. Urutan dibaca kiri ke kanan, lalu ke bawah. Arah
+                    geografis berdasarkan koordinat, bukan arah pandang kamera.
+                    AI hanya tersedia pada satu tile fokus.
+                  </p>
+                </details>
               </div>
-              <p role="status" className="mb-2 text-sm text-sky-200">
-                Urutan saat ini: <strong>{orderLabel}</strong>. {orderNotice}
-              </p>
-              <ol
-                aria-label="Urutan kamera saat ini"
-                className="mb-3 flex flex-wrap gap-2"
+              <div
+                className={`${pages > 1 ? "flex" : "hidden"} mb-3 items-center gap-3 text-sm`}
               >
-                {workspace.channelIds.map((id, index) => (
-                  <li
-                    key={id}
-                    className="rounded-lg border border-slate-700 bg-slate-900 px-2 py-1 text-xs"
-                  >
-                    <span className="font-bold text-jakarta-orange">
-                      {index + 1}.
-                    </span>{" "}
-                    {byId.get(id)?.site.name ?? "Kamera tidak tersedia"} ·{" "}
-                    {byId.get(id)?.channel.label ?? id}
-                  </li>
-                ))}
-              </ol>
-              <p className="mb-2 text-xs text-slate-400">
-                Seret pegangan ↕ ke tile tujuan untuk mengatur layout (mouse /
-                sentuhan), atau fokuskan pegangan dan gunakan tombol panah.
-                Urutan dibaca kiri ke kanan, lalu ke bawah. Arah geografis
-                berdasarkan koordinat, bukan arah pandang kamera. AI hanya
-                tersedia pada satu tile fokus.
-              </p>
-              <p
-                role="status"
-                className="mb-2 rounded-lg bg-slate-900 p-3 text-sm text-amber-200"
-              >
-                {!running
-                  ? "Video belum dimulai / dijeda."
-                  : !visible
-                    ? "Tab tersembunyi; video dijeda."
-                    : mode === "live"
-                      ? "Waktu antar kamera belum diselaraskan."
-                      : sync.message}
-                {mode === "aligned" &&
-                  " Penyelarasan menambah delay dan mengikuti metadata sumber, bukan validasi jam CCTV."}
-              </p>
-              <div className="mb-3 flex items-center gap-3 text-sm">
                 <button
                   className={monitorButton}
                   disabled={currentPage === 0}
@@ -463,6 +512,8 @@ export function MonitorWorkspace({
                       id={id}
                       {...byId.get(id)}
                       index={index}
+                      arranging={pickerOpen}
+                      compact={!pickerOpen && activeIds.length > 2}
                       previewEnabled={visible && activeIds.includes(id)}
                       dropTarget={dragTarget === id}
                       onDragTarget={setDragTarget}

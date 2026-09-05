@@ -16,6 +16,8 @@ export function MonitorTile({
   channel,
   index,
   active,
+  arranging,
+  compact,
   focused,
   aligned,
   register,
@@ -36,6 +38,8 @@ export function MonitorTile({
   channel?: CameraChannel;
   index: number;
   active: boolean;
+  arranging: boolean;
+  compact: boolean;
   focused: boolean;
   aligned: boolean;
   register: (id: string, controller: PlayerController | null) => void;
@@ -149,64 +153,64 @@ export function MonitorTile({
             </span>
             {site?.name ?? "Kamera tidak ada di katalog"}
           </h3>
-          <p className="mt-1 text-xs text-slate-400">
-            {channel?.label ?? id} ·{" "}
-            {site?.agency ?? "Ganti kamera untuk melanjutkan"}
-          </p>
+          <p className="mt-1 text-xs text-slate-400">{channel?.label ?? id}</p>
         </div>
-        <button
-          onPointerDown={(e) => {
-            if (e.button !== 0) return;
-            pointerStart.current = { x: e.clientX, y: e.clientY };
-            e.currentTarget.setPointerCapture(e.pointerId);
-          }}
-          onPointerMove={(e) => {
-            if (!pointerStart.current) return;
-            const target = document
-              .elementFromPoint(e.clientX, e.clientY)
-              ?.closest<HTMLElement>("[data-camera-id]");
-            onDragTarget(target?.dataset.cameraId ?? null);
-          }}
-          onPointerUp={(e) => {
-            const start = pointerStart.current;
-            pointerStart.current = null;
-            onDragTarget(null);
-            if (
-              !start ||
-              Math.hypot(e.clientX - start.x, e.clientY - start.y) < 6
-            )
-              return;
-            const target = document
-              .elementFromPoint(e.clientX, e.clientY)
-              ?.closest<HTMLElement>("[data-camera-id]");
-            if (target?.dataset.cameraId) onReorderTo(target.dataset.cameraId);
-          }}
-          onPointerCancel={() => {
-            pointerStart.current = null;
-            onDragTarget(null);
-          }}
-          onLostPointerCapture={() => {
-            pointerStart.current = null;
-            onDragTarget(null);
-          }}
-          onKeyDown={(e) => {
-            if (
-              ["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"].includes(
-                e.key,
+        {arranging && (
+          <button
+            onPointerDown={(e) => {
+              if (e.button !== 0) return;
+              pointerStart.current = { x: e.clientX, y: e.clientY };
+              e.currentTarget.setPointerCapture(e.pointerId);
+            }}
+            onPointerMove={(e) => {
+              if (!pointerStart.current) return;
+              const target = document
+                .elementFromPoint(e.clientX, e.clientY)
+                ?.closest<HTMLElement>("[data-camera-id]");
+              onDragTarget(target?.dataset.cameraId ?? null);
+            }}
+            onPointerUp={(e) => {
+              const start = pointerStart.current;
+              pointerStart.current = null;
+              onDragTarget(null);
+              if (
+                !start ||
+                Math.hypot(e.clientX - start.x, e.clientY - start.y) < 6
               )
-            ) {
-              e.preventDefault();
-              onMove(e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 1);
-            }
-          }}
-          aria-label={`Geser urutan kamera ${index + 1}`}
-          title="Seret ke tile tujuan, atau gunakan tombol panah saat pegangan fokus"
-          className={`${monitorButton} touch-none cursor-grab select-none active:cursor-grabbing`}
-        >
-          ↕
-        </button>
+                return;
+              const target = document
+                .elementFromPoint(e.clientX, e.clientY)
+                ?.closest<HTMLElement>("[data-camera-id]");
+              if (target?.dataset.cameraId)
+                onReorderTo(target.dataset.cameraId);
+            }}
+            onPointerCancel={() => {
+              pointerStart.current = null;
+              onDragTarget(null);
+            }}
+            onLostPointerCapture={() => {
+              pointerStart.current = null;
+              onDragTarget(null);
+            }}
+            onKeyDown={(e) => {
+              if (
+                ["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"].includes(
+                  e.key,
+                )
+              ) {
+                e.preventDefault();
+                onMove(e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 1);
+              }
+            }}
+            aria-label={`Geser urutan kamera ${index + 1}`}
+            title="Seret ke tile tujuan, atau gunakan tombol panah saat pegangan fokus"
+            className={`${monitorButton} touch-none cursor-grab select-none active:cursor-grabbing`}
+          >
+            ↕
+          </button>
+        )}
       </div>
-      <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
+      <div className={`relative aspect-video overflow-hidden rounded-lg bg-black ${compact && !focused ? "lg:max-h-[max(160px,calc((100dvh-300px)/2))]" : ""}`}>
         {canPlay ? (
           fallback || channel.playback.kind !== "hls" ? (
             <iframe
@@ -258,76 +262,82 @@ export function MonitorTile({
             />
           )}
       </div>
-      <p className="mt-2 text-xs text-slate-300">
-        {active ? status : "Dijeda"}
-      </p>
-      <p
-        className={`mt-1 text-xs ${aligned ? "text-emerald-300" : "text-amber-200"}`}
-      >
-        {active && time
-          ? `${time} WIB · ${aligned ? "Dalam grup penyelarasan metadata" : "Waktu sumber, belum diselaraskan"}`
-          : "Waktu tidak dapat diverifikasi"}
-      </p>
-      <div className="mt-3 flex flex-wrap gap-2">
+      {active && status !== "Siaran aktif" && (
+        <p className="mt-2 text-xs text-slate-300">{status}</p>
+      )}
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         <button className={monitorButton} onClick={onFocus}>
-          {focused ? "Tutup fokus / AI" : "Fokus / AI"}
+          {focused ? "Tutup fokus" : "Fokus"}
         </button>
-        <button
-          className={monitorButton}
-          onClick={() =>
-            void tileRef.current
-              ?.requestFullscreen()
-              .catch(() => setStatus("Layar penuh tidak didukung browser"))
-          }
-        >
-          Layar penuh
-        </button>
-      </div>
-      <details className="mt-2">
-        <summary className="min-h-11 cursor-pointer py-3 text-sm text-sky-200">
-          Opsi kamera · urutan, ganti, hapus
-        </summary>
-        <div className="flex flex-wrap gap-2">
-          <button
-            className={monitorButton}
-            disabled={!active || !channel?.embedUrl}
-            onClick={() => setReload((v) => v + 1)}
-          >
-            Coba lagi
-          </button>
-          <button
-            className={monitorButton}
-            disabled={index === 0}
-            aria-label={`Pindah kamera ${index + 1} lebih awal`}
-            onClick={() => onMove(-1)}
-          >
-            ←
-          </button>
-          <button
-            className={monitorButton}
-            aria-label={`Pindah kamera ${index + 1} lebih akhir`}
-            onClick={() => onMove(1)}
-          >
-            →
-          </button>
-          <button className={monitorButton} onClick={onReplace}>
-            Ganti
-          </button>
-          <button className={monitorButton} onClick={onRemove}>
-            Hapus
-          </button>
-          {channel && (
-            <a
-              href={channel.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
+        <details className="min-w-0 flex-1">
+          <summary className="min-h-11 cursor-pointer px-3 py-3 text-sm text-sky-200">
+            Opsi kamera
+          </summary>
+          <p className="mb-2 text-xs text-slate-300">
+            {site?.agency} · {active ? status : "Dijeda"}
+          </p>
+          <p className="mb-2 text-xs tabular-nums text-slate-300">
+            {active && time
+              ? `${time} WIB · ${aligned ? "Dalam grup sinkron" : "Waktu sumber"}`
+              : "Waktu tidak tersedia"}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
               className={monitorButton}
+              onClick={() => {
+                const tile = tileRef.current;
+                if (!tile?.requestFullscreen) {
+                  setStatus("Layar penuh tidak didukung browser");
+                  return;
+                }
+                void tile
+                  .requestFullscreen()
+                  .catch(() => setStatus("Layar penuh tidak didukung browser"));
+              }}
             >
-              Sumber ↗
-            </a>
-          )}
-        </div>
-      </details>
+              Layar penuh
+            </button>
+            <button
+              className={monitorButton}
+              disabled={!active || !channel?.embedUrl}
+              onClick={() => setReload((v) => v + 1)}
+            >
+              Coba lagi
+            </button>
+            <button
+              className={monitorButton}
+              disabled={index === 0}
+              aria-label={`Pindah kamera ${index + 1} lebih awal`}
+              onClick={() => onMove(-1)}
+            >
+              ←
+            </button>
+            <button
+              className={monitorButton}
+              aria-label={`Pindah kamera ${index + 1} lebih akhir`}
+              onClick={() => onMove(1)}
+            >
+              →
+            </button>
+            <button className={monitorButton} onClick={onReplace}>
+              Ganti
+            </button>
+            <button className={monitorButton} onClick={onRemove}>
+              Hapus
+            </button>
+            {channel && (
+              <a
+                href={channel.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={monitorButton}
+              >
+                Sumber ↗
+              </a>
+            )}
+          </div>
+        </details>
+      </div>
       {focused && <div ref={setControls} className="mt-3" />}
     </article>
   );

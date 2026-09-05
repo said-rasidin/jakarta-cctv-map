@@ -91,10 +91,11 @@ try {
   await page.screenshot({ path: "out/monitor-ux-desktop.png", fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(tiles.locator("img")).toHaveCount(2);
-  await page.getByRole("button", { name: "Tutup daftar kamera" }).click();
+  await page.getByRole("button", { name: "Selesai mengatur" }).click();
   await tiles.first().scrollIntoViewIfNeeded();
   await page.screenshot({ path: "out/monitor-ux-mobile.png", fullPage: true });
   // Touch pointer path uses the same handle without relying on unsupported native HTML drag on mobile.
+  await page.getByRole("button", { name: "Atur", exact: true }).click();
   const touchHandle = tiles
     .first()
     .getByRole("button", { name: "Geser urutan kamera 1" });

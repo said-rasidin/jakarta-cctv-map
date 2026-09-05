@@ -39,7 +39,7 @@ export function CameraPreview({ url, title }: { url: string; title: string }) {
         </div>
       )}
       <p className="absolute inset-x-0 bottom-0 bg-slate-950/90 px-3 py-2 text-xs text-slate-200">
-        Pratinjau · bukan siaran langsung · waktu gambar tidak terverifikasi
+        Pratinjau · bukan live
       </p>
     </div>
   );

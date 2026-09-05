@@ -52,15 +52,23 @@ describe("program-time synchronization", () => {
     b.sample.time = 9000;
     a.sample.sampledAt = b.sample.sampledAt = 1000;
     expect(sync.tick(pool, 1000).members).toEqual(["a", "b"]);
-    expect(a.controller.seekTime).toHaveBeenCalledTimes(1);
+    expect(a.controller.seekTime).not.toHaveBeenCalled();
+    expect(b.controller.seekTime).toHaveBeenCalledWith(2000);
     a.sample.time = 3000;
     b.sample.time = 10000;
     a.sample.sampledAt = b.sample.sampledAt = 2000;
     sync.tick(pool, 2000);
-    expect(a.controller.seekTime).toHaveBeenCalledTimes(1);
+    expect(b.controller.seekTime).toHaveBeenCalledTimes(1);
     sync.reset(pool);
     expect(a.controller.setAligned).toHaveBeenLastCalledWith(false);
     expect(a.controller.setRate).toHaveBeenLastCalledWith(1);
+  });
+  it("selects the slowest shared interval and merges adjacent fragments without bridging gaps", () => {
+    expect(commonWindow([
+      [range(0, 1000), range(1000, 2000), range(5000, 8000)],
+      [range(500, 2000), range(5000, 9000)],
+    ], 800)).toEqual({ start: 500, end: 2000 });
+    expect(commonWindow([[range(5000, 8000)], [range(6000, 9000)]], 1000)).toEqual({ start: 6000, end: 8000 });
   });
   it("excludes missing metadata, stalls and timestamp discontinuities", () => {
     const a = player(1000),
