@@ -930,8 +930,8 @@
       "address": null,
       "catalogSource": "jakarta-public",
       "coordinates": {
-        "lat": -6.195605,
-        "lng": 106.822769,
+        "lat": -6.194353,
+        "lng": 106.823435,
         "source": "manual"
       },
       "searchText": "502492 jkp satpol pp simpang jl mh thamrin c08 menteng jkp satpol pp bali tower cctv 01 cctv 02 simpang jl m h thamrin c08",
@@ -950,8 +950,8 @@
             "aiEligible": true
           },
           "coordinates": {
-            "lat": -6.195605,
-            "lng": 106.822769,
+            "lat": -6.194353,
+            "lng": 106.823435,
             "source": "manual"
           },
           "roadName": "Jl. M.H. Thamrin"
@@ -1260,6 +1260,26 @@
             "source": "manual"
           },
           "roadName": "Jl. Manggarai Utara 2"
+        },
+        {
+          "id": "501594-cctv-02",
+          "label": "CCTV-02",
+          "embedUrl": "https://dki-jkt.balitower.co.id:7028/501594_JKS_DISGULKARMAT_JL.-MANGGARAI-UTARA-2-C01_CCTV-02/embed.html",
+          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/501594_JKS_DISGULKARMAT_JL.-MANGGARAI-UTARA-2-C01_CCTV-02/embed.html",
+          "playback": {
+            "kind": "hls",
+            "url": "https://dki-jkt.balitower.co.id:7028/501594_JKS_DISGULKARMAT_JL.-MANGGARAI-UTARA-2-C01_CCTV-02/index.m3u8",
+            "embedUrl": "https://dki-jkt.balitower.co.id:7028/501594_JKS_DISGULKARMAT_JL.-MANGGARAI-UTARA-2-C01_CCTV-02/embed.html",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.209280359948067,
+            "lng": 106.84985007270394,
+            "source": "manual"
+          },
+          "roadName": "Jl. Manggarai Utara 2"
         }
       ],
       "sourceName": "Jl. Sultan Agung-C03",
@@ -1291,6 +1311,26 @@
             "kind": "hls",
             "url": "https://cctv-jsc.balitower.co.id:8011/Kebon-Melati-010-700332_2/index.m3u8",
             "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kebon-Melati-010-700332_2/embed.html?proto=hls",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.197830324587427,
+            "lng": 106.8234818153728,
+            "source": "manual"
+          },
+          "roadName": "Kebon Melati"
+        },
+        {
+          "id": "700332-cctv-3",
+          "label": "CCTV-3",
+          "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kebon-Melati-010-700332_3/embed.html?proto=hls",
+          "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Kebon-Melati-010-700332_3/embed.html?proto=hls",
+          "playback": {
+            "kind": "hls",
+            "url": "https://cctv-jsc.balitower.co.id:8011/Kebon-Melati-010-700332_3/index.m3u8",
+            "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kebon-Melati-010-700332_3/embed.html?proto=hls",
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
@@ -1385,6 +1425,26 @@
       "searchText": "705084 senayan 001 kebayoran baru bali tower bali tower cctv 2",
       "channels": [
         {
+          "id": "705084-cctv-1",
+          "label": "CCTV-1",
+          "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_1/embed.html?proto=hls",
+          "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_1/embed.html?proto=hls",
+          "playback": {
+            "kind": "hls",
+            "url": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_1/index.m3u8",
+            "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_1/embed.html?proto=hls",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.229487623632896,
+            "lng": 106.80002874551731,
+            "source": "manual"
+          },
+          "roadName": "Senayan"
+        },
+        {
           "id": "705084-cctv-2",
           "label": "CCTV-2",
           "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_2/embed.html?proto=hls",
@@ -1393,6 +1453,46 @@
             "kind": "hls",
             "url": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_2/index.m3u8",
             "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_2/embed.html?proto=hls",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.229487623632896,
+            "lng": 106.80002874551731,
+            "source": "manual"
+          },
+          "roadName": "Senayan"
+        },
+        {
+          "id": "705084-cctv-3",
+          "label": "CCTV-3",
+          "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_3/embed.html?proto=hls",
+          "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_3/embed.html?proto=hls",
+          "playback": {
+            "kind": "hls",
+            "url": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_3/index.m3u8",
+            "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_3/embed.html?proto=hls",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.229487623632896,
+            "lng": 106.80002874551731,
+            "source": "manual"
+          },
+          "roadName": "Senayan"
+        },
+        {
+          "id": "705084-cctv-4",
+          "label": "CCTV-4",
+          "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_4/embed.html?proto=hls",
+          "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_4/embed.html?proto=hls",
+          "playback": {
+            "kind": "hls",
+            "url": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_4/index.m3u8",
+            "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Senayan-001-705084_4/embed.html?proto=hls",
             "corsCapture": "unknown",
             "checkedAt": null,
             "aiEligible": true
@@ -1677,6 +1777,26 @@
           "playback": {
             "kind": "hls",
             "url": "https://dki-jkt.balitower.co.id:7028/501478_JKS_SATPOLPP_TAMAN-LITERASI-C01_CCTV-01/index.m3u8",
+            "embedUrl": "https://dki-jkt.balitower.co.id:7028/501478_JKS_SATPOLPP_TAMAN-LITERASI-C01_CCTV-01/embed.html",
+            "corsCapture": "unknown",
+            "checkedAt": null,
+            "aiEligible": true
+          },
+          "coordinates": {
+            "lat": -6.2426624363448235,
+            "lng": 106.79866450938083,
+            "source": "manual"
+          },
+          "roadName": "Taman Literasi"
+        },
+        {
+          "id": "501478-cctv-02",
+          "label": "CCTV-02",
+          "embedUrl": "https://dki-jkt.balitower.co.id:7028/501478_JKS_SATPOLPP_TAMAN-LITERASI-C01_CCTV-02/embed.html",
+          "sourceUrl": "https://dki-jkt.balitower.co.id:7028/501478_JKS_SATPOLPP_TAMAN-LITERASI-C01_CCTV-02/embed.html",
+          "playback": {
+            "kind": "hls",
+            "url": "https://dki-jkt.balitower.co.id:7028/501478_JKS_SATPOLPP_TAMAN-LITERASI-C01_CCTV-02/index.m3u8",
             "embedUrl": "https://dki-jkt.balitower.co.id:7028/501478_JKS_SATPOLPP_TAMAN-LITERASI-C01_CCTV-01/embed.html",
             "corsCapture": "unknown",
             "checkedAt": null,
