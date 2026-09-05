@@ -1,119 +1,173 @@
 # Jakarta CCTV Map
 
-An interactive map for finding and viewing public CCTV cameras across Jakarta.
+**A simpler way to explore Jakarta's public CCTV cameras.** Find a road, open a camera, and build a personal monitoring view for the places that matter to you.
 
-The application turns Jakarta's official public CCTV directory into a searchable map. Users can search by road, district, agency, or camera ID; filter cameras by agency; find cameras near their current location; and preview supported live streams.
+Jakarta CCTV Map presents public CCTV listings and streams in a searchable map and a flexible monitoring workspace. It is an independent interface for publicly available camera listings and streams - not an official government service.
 
-> **Live demo:** Coming soon. The application is planned for deployment on Vercel.
+> **Live demo:** Coming soon. The application is ready to deploy on Vercel.
 
 ![Jakarta CCTV Map showing clustered public camera locations](docs/jakarta-cctv-map.png)
 
-## Features
+## Data source
 
-- Interactive Jakarta map with clustered camera markers
-- Search by road, district, agency, or camera ID
-- Agency-based camera filters
-- Nearby-camera discovery using browser geolocation
-- Multi-channel selection for supported camera locations
-- On-demand live-stream previews and availability checks
-- Opt-in, client-side YOLO26n object detection for the camera currently open
-- Light and dark map styles
+Camera names, agencies, channel links, and public stream URLs come from the [Jakarta Public CCTV directory](https://jakcctv.jakarta.go.id/publik). Because that directory does not provide map coordinates, this repository keeps a reviewed coordinate dataset and excludes newly found locations from the map until they are checked. Camera operators control stream availability and source-data accuracy.
 
-## Data sources
+## What this project helps you do
 
-Camera metadata and stream links are collected only from the official [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) directory. The ingestion script extracts camera IDs, location names, agencies, and public iframe URLs from that page.
+This project brings together practical tools for exploring public cameras:
 
-The official directory does not include map coordinates. The author has manually reviewed the CCTV links and coordinates in the committed [`data/generated/cameras.json`](data/generated/cameras.json) snapshot and confirmed them as valid at review time. This records the author's review, not a guarantee of future stream availability. Coordinates are manually maintained in [`data/manual/overrides.json`](data/manual/overrides.json), including per-channel positions. Channels at different coordinates appear as independent map plots even when they share a site name. There is no runtime dependency on Streetside or Molecool; external maps/catalogues may have been consulted during manual review.
+- **See cameras on a map** with location clusters for easier exploration.
+- **Search naturally** by road, area, agency, or camera ID.
+- **Watch your way** with a saved, custom monitoring layout for a road or route.
+- **Compare several views at once** in two-, four-, or experimental six-camera layouts.
+- **Experiment with on-device object detection** on one open stream without uploading video frames.
 
-Coordinates are resolved in this order:
+## Start here: find and watch a camera
 
-1. A manually extracted and reviewed entry in [`data/manual/overrides.json`](data/manual/overrides.json)
-2. A manually maintained coordinate from the last successfully generated dataset
+No account is needed.
 
-Newly listed sites without a manual coordinate are placed in [`data/review/unresolved-locations.json`](data/review/unresolved-locations.json) and are not published on the map until reviewed.
+1. Open the map and search for a road, district, agency, or camera ID.
+2. Select a marker to see the available camera channels at that location.
+3. Open a preview to watch a supported public stream.
+4. Use **Kamera di dekat saya** if you want cameras near your current location. Your browser will ask permission first.
 
-Generated camera data is committed to [`data/generated/cameras.json`](data/generated/cameras.json), while locations that still need manual review are written to [`data/review/unresolved-locations.json`](data/review/unresolved-locations.json). The map tiles use OpenStreetMap data rendered by [CARTO](https://carto.com/attributions).
+Camera availability depends on the upstream provider. A stream may be offline, delayed, or prevent embedding without notice.
 
-This project is an independent interface for publicly available data. Camera ownership, stream availability, and upstream data accuracy remain under the control of their respective providers. Review the upstream providers' terms before redistributing their data.
-
-## High-level design
+### How it works
 
 ```mermaid
 flowchart LR
-    A[Jakarta Public CCTV] --> D[Ingestion pipeline]
-    C[Manual coordinates] --> D
-    D --> E[data/generated/cameras.json]
-    E --> F[Next.js application]
-    F --> G[React Leaflet map]
-    F --> H[Stream health API]
-    G --> I[Search, filters, nearby cameras, preview]
+    A[Open the map] --> B[Search or browse camera locations]
+    B --> C[Choose a camera channel]
+    C --> D[Watch a supported public stream]
+    D --> E{What next?}
+    E -->|Compare locations| F[Add channels to a custom monitor]
+    E -->|Inspect one stream| G[Optionally try on-device AI]
+    F --> H[Arrange and save a road layout]
 ```
 
-- **Data pipeline:** `tools/camera-data/ingest.ts` fetches and normalizes the official public directory, groups multiple channels at the same site, applies manually maintained coordinates, and writes a versioned JSON dataset.
-- **Application:** Next.js loads the generated dataset at build time. The interactive React UI performs searching, filtering, distance sorting, and map interaction in the browser.
-- **Map:** React Leaflet renders CARTO map tiles, while Supercluster groups dense camera markers for responsive navigation.
-- **Streams:** Direct Bali Tower streams are loaded only when requested. A server-side API route checks approved stream hosts before the viewer reports availability.
-- **AI experiment:** A direct HLS player samples at most one frame at a time and runs YOLO26n in a browser worker. Frames are not uploaded, recorded, or retained. WebGPU is preferred with a single-thread WASM fallback.
-- **Automation:** GitHub Actions validates every change and refreshes the camera dataset daily. The refresh job keeps the last good dataset if an upstream source returns suspiciously little data.
+## Multi-CCTV monitoring
 
-## Project structure
+Create a personal monitoring workspace for several points along a road, corridor, or regular journey.
 
-The repository is a feature-oriented Next.js application. Runtime boundaries are explicit without requiring separate frontend, backend, and AI deployments:
+![Multi-CCTV monitoring workspace with several camera tiles](docs/multi-cctv-monitoring.png)
 
-```text
-src/
-  app/                 Next.js pages and thin API route adapters
-  domain/cameras/      Shared camera contracts, validation, and pure logic
-  features/cameras/    Camera explorer, map, viewer, hooks, and server checks
-  features/detection/  Browser-side model catalog, post-processing, UI, and worker
-  features/video/      Direct video playback
-tools/
-  camera-data/         Dataset ingestion and validation
-  ai-models/           Build-time ONNX model export
-  build/               Static runtime asset preparation
-data/
-  generated/           Generated camera dataset
-  manual/              Human-reviewed source overrides
-  review/              Unresolved records requiring review
+### How to monitor several cameras
+
+1. From a map popup, camera viewer, or road group, choose **Tambah ke monitor** for each channel you want.
+2. Open **Buka monitor**.
+3. Optionally filter the workspace to a standardised road name, then choose **Mulai monitor**.
+4. Drag a tile's **↕** handle onto another tile (mouse or touch), or focus the handle and use the arrow keys. **Atur utara → selatan** sorts geographically; **Balik urutan** reverses the current layout. The current direction and numbered list update immediately. Geographic order does not describe the camera's viewing direction.
+5. Save one named layout locally in your browser and return to it later.
+
+| Layout | Best for | Notes |
+| --- | --- | --- |
+| Two cameras | A quick comparison | Works well on desktop and mobile. |
+| Four cameras | Monitoring an intersection or route | Desktop-friendly. |
+| Six cameras | A broader corridor | Experimental; use a capable desktop device. |
+
+Only the streams on the current page load. On mobile, playback is limited to two cameras to keep the page responsive. Pausing, switching tabs, closing the workspace, or removing a camera releases playback resources.
+
+Before starting or while paused, visible tiles request a single `preview.jpg` directly from their known public Bali Tower stream origin. There is no automatic refresh or video download for previews. Snapshots can be old: their timestamps and camera availability are not verified. Failed or unsupported previews display an explanation; you can still start the stream. Off-page and background tiles do not mount preview images.
+
+The navy/blue interface and orange accents are inspired by [the official +Jakarta color identity](https://www.jakarta.go.id/informasi-kolaborasi) (Biru Abang and Jingga Bis Kota), with interface-specific shades. This is not an official Jakarta government application.
+
+**Live timing:** Choose **Terbaru** to follow each stream's own live edge. **Selaraskan waktu** can delay faster HLS streams when compatible timing information is available; it is best-effort and does not prove that a camera clock or on-screen timestamp is correct.
+
+## Optional AI: object-detection experiment
+
+For supported direct streams, **Coba AI** can highlight traffic-related objects in the camera currently open: people, bicycles, cars, motorcycles, buses, and trucks.
+
+### AI model in brief
+
+The experiment uses a YOLO26 object-detection model exported to the browser-friendly ONNX format. It recognises common COCO traffic classes rather than Jakarta-specific events or behaviours. Choose a smaller Nano model for faster results, or Small/Medium on a more capable device for potentially more detail; every result remains an estimate.
+
+![Client-side object detection running on a Jakarta CCTV stream](docs/object-detection.png)
+
+- It is **off by default** and starts only after you press **Coba AI**.
+- Video frames stay on your device: they are processed in a browser worker, not sent to this app's server, recorded, or retained.
+- It runs on one focused camera only. Turn it off before changing model settings to free device memory.
+- Results are experimental and can be wrong. Do not use them for enforcement, emergency response, or public-safety decisions.
+
+The application prefers WebGPU when your browser supports it and uses a single-thread WASM fallback otherwise. Nano FP16 is the default model; Nano INT8 is typically the lightest option for CPU/WASM, while Small and Medium can improve detail on faster devices.
+
+### Object detection: user flow
+
+```mermaid
+flowchart LR
+    A[Open one supported direct stream] --> B[Press Coba AI]
+    B --> C[Browser downloads the selected model once]
+    C --> D[Sample the newest video frame]
+    D --> E[Process it in a local browser worker]
+    E --> F{Available acceleration}
+    F -->|Preferred| G[WebGPU]
+    F -->|Fallback| H[Single-thread WASM]
+    G --> I[Show temporary boxes and counts]
+    H --> I
+    I --> J[Turn off AI, switch, hide, or close]
+    J --> K[Stop sampling and release the worker]
 ```
 
-The AI path remains client-side: the detection feature sends frames only to its local browser worker. The Python model exporter under `tools/ai-models` runs during model preparation and is not a production service.
+Frames stay in the browser throughout this flow; the application server does not receive or store them.
 
-## Run locally
+## Privacy and data
 
-### Requirements
+Your location is requested only when you select the nearby-camera feature. It stays in the browser for that session and is not stored by this project.
 
-- [Node.js](https://nodejs.org/) 22 or later
-- npm
+Map tiles and camera streams come directly from third-party providers, which receive ordinary network information such as an IP address under their own policies. This project does not archive CCTV footage. When AI is enabled, frames and detections remain on the device as described above.
 
-Install dependencies and start the development server:
+## For developers
+
+### Tech stack
+
+- **Framework:** Next.js 16, React 19, TypeScript, and Tailwind CSS
+- **Map and search:** React Leaflet, Leaflet, Supercluster, and CARTO raster tiles
+- **Video and monitoring:** HLS.js with browser-managed playback and local layout storage
+- **Optional AI:** ONNX Runtime Web with a YOLO26 model, using WebGPU or WASM in a browser worker
+- **Data and quality:** TypeScript ingestion and validation tools, Vitest, ESLint, and GitHub Actions
+
+### Run locally
+
+**You need:** [Node.js](https://nodejs.org/) 22 or later and npm. Create your local environment file before starting:
 
 ```bash
+cp .env.example .env.local
 npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+In PowerShell, use `Copy-Item .env.example .env.local` instead of `cp`.
 
-### CARTO map key
+Then open [http://localhost:3000](http://localhost:3000).
 
-Request a **basemap API key** from [CARTO](https://carto.com/basemaps/apikey/) and set it in `.env` or `.env.local`:
+The repository includes a generated camera snapshot, so the application can build without fetching camera data. Map tiles and live streams still need a network connection at runtime.
+
+### Configure CARTO map tiles
+
+Request a **basemap API key** from [CARTO](https://carto.com/basemaps/apikey/) and place it in `.env.local`:
 
 ```dotenv
 CARTO_BASEMAP_API_KEY=your_basemap_key_here
 ```
 
-Replace the placeholder with your real basemap key. The previous `CARTO_API_ACCESS_TOKEN` variable is accepted as an alias only if its value is a basemap key. An account API access token is a different credential; `CARTO_API_BASE_URL` is not used for basemap tiles. Neither variable needs a `NEXT_PUBLIC_` prefix.
+Restart the development server after changing the key. Do not commit it. `CARTO_API_ACCESS_TOKEN` remains accepted as an alias only when its value is a basemap key; an account API token is a different credential. The application keeps the key on the server-side tile route rather than exposing it to browser code.
 
-Restart `npm run dev` after changing the environment. For Docker Compose, use `.env` (Compose does not automatically read `.env.local`) and run `docker compose up -d --force-recreate`. For Vercel, add `CARTO_BASEMAP_API_KEY` to the project environment and redeploy. Do not commit your key.
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `CARTO_BASEMAP_API_KEY` | Yes, for map tiles | Server-side CARTO basemap key. |
+| `NEXT_PUBLIC_ENABLE_CCTV_AI` | No | Set to `true` only after preparing local AI model assets. Defaults to `false`. |
 
-The server tile route appends the key to CARTO requests, preserves attribution, and caches successful PNG responses; the key is not sent to browser code. This adds tile traffic through the app/Vercel. A hard refresh may be needed for previously cached watermarked tiles. A key cannot fix an invalid or expired credential. Raster tiles remain in use; a future vector migration would require replacing the Leaflet raster layer.
+For Docker Compose, put the variable in `.env` (Compose does not automatically read `.env.local`) and run:
 
-The repository already contains a generated camera dataset, so an internet connection is not required to build the application itself. Map tiles and live camera streams still require network access at runtime.
+```bash
+docker compose up --build
+```
 
-### Optional local YOLO26n experiment
+The Compose environment enables the AI experiment for local verification. Build the optimized production image with `docker build -f Dockerfile.vercel .`.
 
-The separately licensed model is not committed or downloaded during a normal app install. To enable **Coba AI**, install the pinned Python export dependencies and generate the web asset:
+### Enable the AI experiment locally
+
+The separately licensed YOLO model is not committed or downloaded during normal installation. To prepare it locally:
 
 ```powershell
 Copy-Item .env.example .env.local
@@ -123,96 +177,33 @@ py tools/ai-models/export-yolo26n.py
 npm run dev
 ```
 
-The exporter creates content-hashed 320×320 ONNX assets plus a validated model catalog under `public/models/yolo26n`. By default it prepares FP16 and INT8 versions of nano, small, and medium. The camera viewer has separate model-size and precision controls and downloads only the selected model on the first **Coba AI** click. AI stops and its worker/session are released when disabled, hidden, switched, or closed. Review Ultralytics licensing and the camera operator's terms before deployment.
+The exporter creates content-hashed ONNX assets and a model catalog under `public/models/yolo26n`. Review Ultralytics licensing and each camera operator's terms before deployment.
 
-## How AI works
+Choose packaged model variants for Docker with these variables before `docker compose up --build`:
 
-The AI mode is opt-in. It never loads a model, records video, or sends pixels to the application server until the viewer presses **Coba AI** for the currently open camera.
+| Setting | Values | Default |
+| --- | --- | --- |
+| `AI_MODEL_VARIANT` | `all`, `nano`, `small`, `medium` | `all` |
+| `AI_MODEL_PRECISION` | `all`, `fp32`, `fp16`, `int8` | `all` |
+| `AI_MODEL_IMAGE_SIZE` | An integer such as `320`, `416`, or `640` | `320` |
 
-```mermaid
-flowchart LR
-    A[Open one CCTV stream] --> B[Direct HLS video element]
-    B --> C[One sampled decoded frame]
-    C --> D[Letterbox to model input]
-    D --> E[Browser inference worker]
-    E --> F[WebGPU preferred]
-    E --> G[Single-thread WASM fallback]
-    F --> H[Traffic-object boxes and counts]
-    G --> H
-    H --> I[Transparent local overlay]
-    J[Viewer closed, paused, hidden, or switched] --> K[Cancel sampling and release worker]
-```
-
-![Client-side object detection running on a Jakarta CCTV stream](docs/object-detection.png)
-
-Only one frame can be in inference at a time. As soon as it finishes, the worker samples the newest decoded frame instead of queueing old frames. It runs at up to roughly 10 FPS when the device is fast enough, while the one-job limit protects memory. The viewer shows measured inference latency and estimated FPS. The initial COCO labels shown are person, bicycle, car, motorcycle, bus, and truck. Results are ephemeral and experimental.
-
-### Choose a YOLO26 experiment
-
-Compose packages all three selectable model sizes in FP16 and INT8. The UI defaults to Nano FP16. Set these environment variables before `docker compose up --build`; use `--build` whenever the packaged selection changes.
-
-| Setting | Values | Default | Notes |
-| --- | --- | --- | --- |
-| `AI_MODEL_VARIANT` | `all`, `nano`, `small`, `medium` | `all` | `all` enables the Nano/Small/Medium picker. A single value packages only that choice. |
-| `AI_MODEL_PRECISION` | `all`, `fp32`, `fp16`, `int8` | `all` | `all` packages FP16 and INT8. INT8 uses COCO8 calibration. INT4 is not supported for YOLO26 ONNX. |
-| `AI_MODEL_IMAGE_SIZE` | integer, e.g. `320`, `416`, `640` | `320` | A larger square input improves small-object detail at a memory/latency cost. |
-
-PowerShell examples:
-
-```powershell
-# All sizes with both UI-selectable precisions
-$env:AI_MODEL_VARIANT = "all"
-$env:AI_MODEL_PRECISION = "all"
-docker compose up --build
-
-# Lowest-latency package for CPU/WASM
-$env:AI_MODEL_VARIANT = "nano"
-$env:AI_MODEL_PRECISION = "int8"
-$env:AI_MODEL_IMAGE_SIZE = "320"
-docker compose up --build
-```
-
-For the non-Docker exporter, pass the same selection explicitly:
+For a non-Docker export:
 
 ```powershell
 py tools/ai-models/export-yolo26n.py --variant all --precision all --imgsz 320
 ```
 
-The two pickers select model size and precision independently. Nano FP16 is selected by default. Choose Nano INT8 for the lowest CPU/WASM latency; use Small or Medium only when the device can keep up. Turn AI off before changing models so the existing worker and model memory are released. INT4 appears as unavailable because the official YOLO26 ONNX exporter supports FP32, FP16, and INT8—not INT4.
+### Refresh camera data
 
-### Production build
+Camera metadata and stream links are collected only from the official [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) directory. Coordinates are manually reviewed and maintained because the directory does not provide map coordinates.
 
-```bash
-npm run build
-npm start
-```
-
-### Docker
-
-Build and run the production image with Docker Compose:
+To normalise names without fetching or replacing reviewed URLs and coordinates:
 
 ```bash
-docker compose up --build
+npx tsx tools/camera-data/normalize-names.ts
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
-
-The Compose build automatically installs the pinned Python AI dependencies, exports the selectable YOLO26 catalog to content-hashed ONNX web assets, and copies the ONNX Runtime browser files. It then starts `npm run dev` with the AI experiment enabled, so no host Python or Node setup is needed for local verification. A regular `docker build .` still produces the optimized production image.
-
-## Deploy to Vercel
-
-The public deployment is not available yet. To create one:
-
-1. Import this repository into [Vercel](https://vercel.com/).
-2. Keep the detected Next.js framework settings and default build command.
-3. Deploy the `main` branch.
-4. Add the production URL to the **Live demo** section at the top of this README.
-
-The scheduled GitHub Actions refresh is separate from Vercel and can update the committed dataset independently of a Vercel deployment.
-
-## Refresh the camera data
-
-Run:
+To ingest and validate data:
 
 ```bash
 npm run ingest
@@ -220,11 +211,47 @@ npm run validate-data
 npm run validate-streams
 ```
 
-Review unresolved locations after ingestion. Add verified coordinates to [`data/manual/overrides.json`](data/manual/overrides.json) using the camera site ID as the key, then run the ingestion again. Manual coordinates always take precedence over the previously generated dataset.
+Locations are resolved from manually reviewed entries in [`data/manual/overrides.json`](data/manual/overrides.json), then from the previous generated dataset. New unresolved sites go to [`data/review/unresolved-locations.json`](data/review/unresolved-locations.json) and are not put on the map until reviewed. Do not edit [`data/generated/cameras.json`](data/generated/cameras.json) directly.
 
-## Quality checks
+### Project structure
 
-Run the same checks used in continuous integration:
+```text
+src/
+  app/                   Next.js pages and API route adapters
+  domain/cameras/        Shared camera types, schemas, and pure logic
+  features/cameras/      Map, search, viewer, and stream availability checks
+  features/monitoring/   Custom layouts, playback coordination, and saved state
+  features/detection/    Browser AI controls, overlays, and inference worker
+  features/video/        Direct HLS video playback
+data/
+  generated/             Committed camera dataset used by the application
+  manual/                Reviewed coordinate overrides
+  review/                Locations awaiting manual verification
+tools/
+  camera-data/           Ingestion, normalisation, and validation scripts
+  ai-models/             YOLO26 ONNX model export
+  build/                 Browser runtime asset preparation
+```
+
+### Architecture at a glance
+
+```mermaid
+flowchart LR
+    A[Official Jakarta Public CCTV directory] --> B[Ingestion and review]
+    C[Manual coordinate overrides] --> B
+    B --> D[Generated camera dataset]
+    D --> E[Next.js application]
+    E --> F[Searchable map and camera viewer]
+    E --> G[Custom monitoring workspace]
+    E --> H[Optional local AI worker]
+```
+
+- `src/features/cameras/` contains the explorer, map, viewer, location lookup, and stream checks.
+- `src/features/monitoring/` contains layouts, ordering, playback coordination, and locally saved workspace state.
+- `src/features/detection/` contains the browser-side model catalog, inference worker, and overlays.
+- `tools/camera-data/` ingests and validates the source directory; `tools/ai-models/` prepares ONNX web assets.
+
+### Checks
 
 ```bash
 npm run validate-data
@@ -233,34 +260,37 @@ npm test
 npm run build
 ```
 
-`npm run validate-streams` performs network requests to upstream cameras and is therefore kept separate from the standard CI checks.
+### Deploy to Vercel
 
-## Known limitations
+This repository includes [`Dockerfile.vercel`](Dockerfile.vercel). Vercel detects it automatically and deploys the container, including the optional browser AI assets.
 
-- Public streams can be offline, slow, or blocked from embedding without notice.
-- HLS playback and AI capture require full-chain CORS support; the viewer falls back to the public iframe and disables AI if direct playback fails.
-- YOLO detections are experimental and may be wrong. They must not be used for enforcement or public-safety decisions.
-- Manually extracted coordinates may be approximate and should be corrected through the review process.
-- Nearby-camera discovery requires browser location permission.
-- The application interface is currently in Indonesian, although this documentation is in English.
-- Map tiles, camera catalogs, and streams depend on third-party services outside this project's control.
+1. Push the repository to GitHub, then import it from the [Vercel dashboard](https://vercel.com/new).
+2. In **Environment Variables**, add `CARTO_BASEMAP_API_KEY` for **Production** (and **Preview** if you want map tiles in preview deployments).
+3. Keep the default project settings; do not add a custom build or output command.
+4. Deploy. Pushes to the production branch create production deployments; other branches receive preview URLs.
 
-## Privacy
-
-The application does not store a user's location. Browser geolocation is requested only after the user selects the nearby-camera feature and remains in client-side memory for that session.
-
-Map tiles and camera streams are loaded from external providers. Those providers receive ordinary network information, such as the user's IP address, according to their own privacy policies. This project does not record or archive CCTV footage.
-
-When explicitly enabled, object detection runs on the user's device for only the open camera. Frames and detections are not sent to this application's server or stored by the application.
+The scheduled camera-data refresh workflow was intentionally removed. Refresh, review, and commit camera data from a trusted local or CI workflow before deploying it.
 
 ## Contributing
 
-Corrections and improvements are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the development workflow, data-correction process, and pull request checklist.
+Corrections and improvements are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow, coordinate-correction process, and pull-request checklist.
 
-Please do not edit `data/generated/cameras.json` directly. For incorrect camera coordinates, add a verified correction to `data/manual/overrides.json` and regenerate the dataset.
+## Cite this project
+
+If you use this repository in research, a report, or another project, please cite the repository and include the commit or release you used:
+
+```bibtex
+@software{rasidin_2026_jakarta_cctv_map,
+  author  = {Rasidin, Said},
+  title   = {Jakarta CCTV Map},
+  year    = {2026},
+  url     = {https://github.com/said-rasidin/jakarta-cctv-map},
+  note    = {Accessed: 2026-09-05. Commit or release: <your-version>}
+}
+```
 
 ## License and attribution
 
 Except for third-party materials described below, this project is licensed under the [Creative Commons Attribution 4.0 International License](LICENSE.md).
 
-Camera listings and public stream links come from the [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) directory. The underlying video and image feeds remain the property of their respective owners and are not covered by this project's license. OpenStreetMap, CARTO, dependencies, and other third-party materials remain subject to their own licenses and terms.
+Camera listings and public stream links originate with the [Jakarta Public CCTV](https://jakcctv.jakarta.go.id/publik) directory. Video feeds remain the property of their respective owners and are not covered by this project's license. OpenStreetMap, CARTO, dependencies, and other third-party material remain subject to their own licenses and terms.

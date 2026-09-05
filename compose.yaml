@@ -2,7 +2,7 @@ services:
   cctv-map:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.vercel
       target: development
       args:
         NEXT_PUBLIC_ENABLE_CCTV_AI: "true"
