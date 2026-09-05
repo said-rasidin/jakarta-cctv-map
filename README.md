@@ -4,7 +4,7 @@
 
 Jakarta CCTV Map presents public CCTV listings and streams in a searchable map and a flexible monitoring workspace. It is an independent interface for publicly available camera listings and streams - not an official government service.
 
-> **Live demo:** Coming soon. The application is ready to deploy on Vercel.
+> **Live demo:** [jakarta-cctv-map.vercel.app](https://jakarta-cctv-map.vercel.app/)
 
 ![Jakarta CCTV Map showing clustered public camera locations](docs/jakarta-cctv-map.png)
 
