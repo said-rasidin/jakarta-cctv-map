@@ -1873,6 +1873,132 @@
       ],
       "sourceName": "Taman Literasi-C01",
       "roadName": "Taman Literasi"
+    },
+    {
+      "id": "705651",
+      "name": "Cikoko 006",
+      "normalizedName": "cikoko 006",
+      "district": "Pancoran",
+      "areaCode": null,
+      "agency": "Bali Tower",
+      "provider": "Bali Tower",
+      "address": "Dekat Halte TransJakarta Cikoko",
+      "catalogSource": "jakarta-public",
+      "coordinates": { "lat": -6.242893440781555, "lng": 106.85767403727141, "source": "manual" },
+      "searchText": "705651 cikoko 006 pancoran bali tower cctv 1 cctv 2 cctv 3 cctv 4 halte transjakarta cikoko",
+      "channels": [
+        {
+          "id": "705651-cctv-1", "label": "CCTV-1", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_1/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_1/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_1/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_1/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.242893440781555, "lng": 106.85767403727141, "source": "manual" }, "roadName": "Cikoko"
+        },
+        {
+          "id": "705651-cctv-2", "label": "CCTV-2", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_2/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_2/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_2/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_2/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.242893440781555, "lng": 106.85767403727141, "source": "manual" }, "roadName": "Cikoko"
+        },
+        {
+          "id": "705651-cctv-3", "label": "CCTV-3", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_3/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_3/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_3/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_3/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.242893440781555, "lng": 106.85767403727141, "source": "manual" }, "roadName": "Cikoko"
+        },
+        {
+          "id": "705651-cctv-4", "label": "CCTV-4", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_4/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_4/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_4/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Cikoko-006-705651_4/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.242893440781555, "lng": 106.85767403727141, "source": "manual" }, "roadName": "Cikoko"
+        }
+      ],
+      "sourceName": "Cikoko 006",
+      "roadName": "Cikoko"
+    },
+    {
+      "id": "705052",
+      "name": "Gatot Subroto Depan Museum Satria Mandala",
+      "normalizedName": "gatot subroto depan museum satria mandala",
+      "district": "Setiabudi",
+      "areaCode": null,
+      "agency": "Bali Tower",
+      "provider": "Bali Tower",
+      "address": "Jl. Gatot Subroto, depan Museum Satria Mandala",
+      "catalogSource": "jakarta-public",
+      "coordinates": { "lat": -6.230952018492666, "lng": 106.81987550420907, "source": "manual" },
+      "searchText": "705052 gatot subroto depan museum satria mandala setiabudi bali tower cctv 2 cctv 3 cctv 4 kuningan barat 003",
+      "channels": [
+        {
+          "id": "705052-cctv-2", "label": "CCTV-2", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_2/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_2/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_2/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_2/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.230952018492666, "lng": 106.81987550420907, "source": "manual" }, "roadName": "Jl. Gatot Subroto"
+        },
+        {
+          "id": "705052-cctv-3", "label": "CCTV-3", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_3/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_3/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_3/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_3/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.230952018492666, "lng": 106.81987550420907, "source": "manual" }, "roadName": "Jl. Gatot Subroto"
+        },
+        {
+          "id": "705052-cctv-4", "label": "CCTV-4", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_4/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_4/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_4/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Kuningan-Barat-003-705052_4/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.230952018492666, "lng": 106.81987550420907, "source": "manual" }, "roadName": "Jl. Gatot Subroto"
+        }
+      ],
+      "sourceName": "Gatot Subroto Depan Museum Satria Mandala",
+      "roadName": "Jl. Gatot Subroto"
+    },
+    {
+      "id": "700470",
+      "name": "Gelora 017",
+      "normalizedName": "gelora 017",
+      "district": "Tanah Abang",
+      "areaCode": null,
+      "agency": "Bali Tower",
+      "provider": "Bali Tower",
+      "address": "Depan Pintu 10 GBK (Gerbang Pemuda)",
+      "catalogSource": "jakarta-public",
+      "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" },
+      "searchText": "700470 gelora 017 tanah abang bali tower cctv 2 cctv 3 cctv 4 cctv 5 cctv 6 cctv 7 cctv 8 cctv 9 depan pintu 10 gbk gerbang pemuda",
+      "channels": [
+        {
+          "id": "700470-cctv-2", "label": "CCTV-2", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_2/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_2/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_2/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_2/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" }, "roadName": "Jl. Gerbang Pemuda"
+        },
+        {
+          "id": "700470-cctv-3", "label": "CCTV-3", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_3/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_3/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_3/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_3/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" }, "roadName": "Jl. Gerbang Pemuda"
+        },
+        {
+          "id": "700470-cctv-4", "label": "CCTV-4", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_4/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_4/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_4/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_4/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" }, "roadName": "Jl. Gerbang Pemuda"
+        },
+        {
+          "id": "700470-cctv-5", "label": "CCTV-5", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_5/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_5/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_5/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_5/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" }, "roadName": "Jl. Gerbang Pemuda"
+        },
+        {
+          "id": "700470-cctv-6", "label": "CCTV-6", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_6/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_6/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_6/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_6/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" }, "roadName": "Jl. Gerbang Pemuda"
+        },
+        {
+          "id": "700470-cctv-7", "label": "CCTV-7", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_7/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_7/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_7/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_7/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" }, "roadName": "Jl. Gerbang Pemuda"
+        },
+        {
+          "id": "700470-cctv-8", "label": "CCTV-8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_8/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_8/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_8/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_8/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" }, "roadName": "Jl. Gerbang Pemuda"
+        },
+        {
+          "id": "700470-cctv-9", "label": "CCTV-9", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_9/embed.html?proto=hls", "sourceUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_9/embed.html?proto=hls",
+          "playback": { "kind": "hls", "url": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_9/index.m3u8", "embedUrl": "https://cctv-jsc.balitower.co.id:8011/Gelora-017-700470_9/embed.html?proto=hls", "corsCapture": "unknown", "checkedAt": null, "aiEligible": true },
+          "coordinates": { "lat": -6.213296256433735, "lng": 106.80241084160305, "source": "manual" }, "roadName": "Jl. Gerbang Pemuda"
+        }
+      ],
+      "sourceName": "Gelora 017",
+      "roadName": "Jl. Gerbang Pemuda"
     }
   ]
 }
