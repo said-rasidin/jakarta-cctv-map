@@ -1,10 +1,11 @@
 "use client";
 
 import {
+  ChevronDown,
+  ChevronUp,
   Crosshair,
   MapPin,
   Search,
-  SlidersHorizontal,
   Video,
   X,
 } from "lucide-react";
@@ -50,6 +51,7 @@ export default function CameraExplorer({
   const [monitorOpen, setMonitorOpen] = useState(false);
   const monitor = useWorkspace();
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
+  const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [visibleGroups, setVisibleGroups] = useState(16);
   const streamHealth = useStreamHealth(dataset.sites);
@@ -57,8 +59,6 @@ export default function CameraExplorer({
   const {
     query,
     setQuery,
-    agencies,
-    availableAgencies,
     availableLocations,
     statusCounts,
     statusFilter,
@@ -67,7 +67,6 @@ export default function CameraExplorer({
     setLocationFilter,
     ordered,
     groups,
-    toggleAgency,
     resetFilters,
   } = useCameraFilters(dataset.sites, streamHealth, userLocation);
   const totalChannels = useMemo(
@@ -100,13 +99,13 @@ export default function CameraExplorer({
         streamHealth={streamHealth}
       />
       <aside className="absolute inset-x-3 top-3 z-20 rounded-2xl border border-slate-700/80 bg-slate-900/95 p-3 shadow-2xl backdrop-blur md:inset-y-3 md:left-3 md:right-auto md:w-[360px] md:overflow-y-auto">
-        <div className="mb-4 flex items-center gap-3">
+        <div className="mb-3 flex items-center gap-3 md:mb-4">
           <div className="grid h-9 w-9 place-items-center rounded-xl bg-jakarta-orange text-slate-950">
             <Video size={19} />
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <h1 className="font-semibold text-white">Peta CCTV Jakarta</h1>
-            <p className="text-xs text-slate-400">
+            <p className="hidden text-xs text-slate-400 md:block">
               {dataset.sites.length} lokasi · {totalChannels} titik CCTV ·
               diperbarui{" "}
               {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(
@@ -114,7 +113,18 @@ export default function CameraExplorer({
               )}
             </p>
           </div>
+          <button
+            type="button"
+            aria-expanded={mobilePanelOpen}
+            aria-controls="mobile-map-controls"
+            onClick={() => setMobilePanelOpen((value) => !value)}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-slate-700 text-sky-200 md:hidden"
+            aria-label={mobilePanelOpen ? "Minimalkan kontrol peta" : "Tampilkan kontrol peta"}
+          >
+            {mobilePanelOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
         </div>
+        <div id="mobile-map-controls" className={mobilePanelOpen ? "block" : "hidden md:block"}>
         <button
           onClick={() => {
             setViewerOpen(false);
@@ -154,28 +164,14 @@ export default function CameraExplorer({
           className="mt-2 min-h-11 w-full rounded-lg border border-slate-700 text-sm text-sky-200 md:hidden"
         >
           {filtersOpen
-            ? "Tutup filter & daftar"
-            : `Filter & daftar · ${ordered.length} lokasi / ${visibleChannels} CCTV`}
+            ? "Sembunyikan filter & daftar"
+            : `Tampilkan filter & daftar · ${ordered.length} lokasi / ${visibleChannels} CCTV`}
         </button>
         <div
           id="camera-filters"
           className={`${filtersOpen ? "block" : "hidden"} max-h-[55dvh] overflow-y-auto md:block md:max-h-none md:overflow-visible`}
         >
-          <div className="mt-3 flex items-center gap-2 text-xs font-medium text-slate-400">
-            <SlidersHorizontal size={14} /> Filter instansi
-          </div>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {availableAgencies.map((agency) => (
-              <button
-                key={agency}
-                onClick={() => toggleAgency(agency)}
-                className={`rounded-full border px-2.5 py-1 text-xs transition ${agencies.has(agency) ? "border-sky-400 bg-sky-400/15 text-sky-200" : "border-slate-700 text-slate-400 hover:border-slate-500"}`}
-              >
-                {agency}
-              </button>
-            ))}
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-3 grid grid-cols-2 gap-3">
             <label className="block">
               <span className="mb-1.5 block text-xs font-medium text-slate-400">
                 Status kamera
@@ -231,9 +227,7 @@ export default function CameraExplorer({
               {ordered.length} lokasi · {visibleChannels} titik CCTV ·{" "}
               {groups.length} ruas/area
             </p>
-            {(query ||
-              agencies.size ||
-              statusFilter !== "all" ||
+            {(query || statusFilter !== "all" ||
               locationFilter !== "all") && (
               <button
                 onClick={resetFilters}
@@ -334,6 +328,7 @@ export default function CameraExplorer({
               Tampilkan lainnya ({groups.length - visibleGroups} lokasi)
             </button>
           )}
+        </div>
         </div>
       </aside>
       <CameraViewer

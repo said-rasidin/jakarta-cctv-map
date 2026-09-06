@@ -42,10 +42,10 @@ const site: CameraSite = {
 describe("camera utilities", () => {
   it("normalizes accented and punctuation-heavy queries", () =>
     expect(normalizeText("Ménténg / Jl. MH.")).toBe("menteng jl mh"));
-  it("filters by query and selected agency", () => {
-    expect(filterSites([site], "menteng", new Set()).length).toBe(1);
-    expect(filterSites([site], "thamrin", new Set(["Dishub"])).length).toBe(1);
-    expect(filterSites([site], "thamrin", new Set(["Polda"])).length).toBe(0);
+  it("filters by query", () => {
+    expect(filterSites([site], "menteng")).toHaveLength(1);
+    expect(filterSites([site], "thamrin")).toHaveLength(1);
+    expect(filterSites([site], "polda")).toHaveLength(0);
   });
   it("calculates nearby distances and rejects out-of-bound coordinates", () => {
     expect(

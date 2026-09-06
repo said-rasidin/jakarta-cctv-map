@@ -14,11 +14,11 @@ export function normalizeText(value: string) {
     .trim();
 }
 
-export function filterSites(sites: CameraSite[], query: string, agencies: Set<string>) {
+export function filterSites(sites: CameraSite[], query: string) {
   const normalizedQuery = normalizeText(query);
   return sites.filter((site) => {
     const queryMatches = !normalizedQuery || site.searchText.includes(normalizedQuery);
-    return queryMatches && (!agencies.size || agencies.has(site.agency));
+    return queryMatches;
   });
 }
 

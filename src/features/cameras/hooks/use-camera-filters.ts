@@ -9,20 +9,18 @@ export type StatusFilter = "all" | Exclude<CameraStatus, "checking">;
 
 export function useCameraFilters(sites: CameraSite[], streamHealth: Record<string, StreamHealth>, userLocation: UserLocation | null) {
   const [query, setQuery] = useState("");
-  const [agencies, setAgencies] = useState<Set<string>>(new Set());
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [locationFilter, setLocationFilter] = useState("all");
 
-  const availableAgencies = useMemo(() => [...new Set(sites.map((site) => site.agency))].sort(), [sites]);
   const availableLocations = useMemo(() => [...new Set(sites.map(locationLabel))].sort((a, b) => a.localeCompare(b, "id")), [sites]);
   const statusCounts = useMemo(() => sites.reduce((counts, site) => {
     counts[cameraStatus(site, streamHealth)]++;
     return counts;
   }, { active: 0, inactive: 0, checking: 0 }), [sites, streamHealth]);
-  const filtered = useMemo(() => filterSites(sites, query, agencies).filter((site) =>
+  const filtered = useMemo(() => filterSites(sites, query).filter((site) =>
     (locationFilter === "all" || locationLabel(site) === locationFilter)
     && (statusFilter === "all" || cameraStatus(site, streamHealth) === statusFilter)
-  ), [sites, query, agencies, locationFilter, statusFilter, streamHealth]);
+  ), [sites, query, locationFilter, statusFilter, streamHealth]);
   const ordered = useMemo(() => userLocation
     ? [...filtered].sort((a, b) => distanceInKm(userLocation, a.coordinates) - distanceInKm(userLocation, b.coordinates))
     : filtered, [filtered, userLocation]);
@@ -37,21 +35,15 @@ export function useCameraFilters(sites: CameraSite[], streamHealth: Record<strin
     return [...grouped.values()];
   }, [ordered]);
 
-  const toggleAgency = (agency: string) => setAgencies((current) => {
-    const next = new Set(current);
-    next.has(agency) ? next.delete(agency) : next.add(agency);
-    return next;
-  });
   const resetFilters = () => {
     setQuery("");
-    setAgencies(new Set());
     setStatusFilter("all");
     setLocationFilter("all");
   };
 
   return {
-    query, setQuery, agencies, availableAgencies, availableLocations, statusCounts,
+    query, setQuery, availableLocations, statusCounts,
     statusFilter, setStatusFilter, locationFilter, setLocationFilter,
-    ordered, groups, toggleAgency, resetFilters,
+    ordered, groups, resetFilters,
   };
 }

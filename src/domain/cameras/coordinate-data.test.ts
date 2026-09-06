@@ -4,8 +4,8 @@ import overrides from "../../../data/manual/overrides.json";
 
 describe("reviewed camera positions", () => {
   it("keeps the existing catalog and official playback sources", () => {
-    expect(dataset.sites).toHaveLength(29);
-    expect(new Set(dataset.sites.map((site) => site.id)).size).toBe(29);
+    expect(dataset.sites).toHaveLength(32);
+    expect(new Set(dataset.sites.map((site) => site.id)).size).toBe(32);
     for (const site of dataset.sites) {
       for (const channel of site.channels) {
         expect([

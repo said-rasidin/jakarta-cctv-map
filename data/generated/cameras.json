@@ -1913,13 +1913,13 @@
     },
     {
       "id": "705052",
-      "name": "Gatot Subroto Depan Museum Satria Mandala",
-      "normalizedName": "gatot subroto depan museum satria mandala",
+      "name": "Jl. Jend. Gatot Subroto - Depan Museum Satria Mandala",
+      "normalizedName": "jl jend gatot subroto depan museum satria mandala",
       "district": "Setiabudi",
       "areaCode": null,
       "agency": "Bali Tower",
       "provider": "Bali Tower",
-      "address": "Jl. Gatot Subroto, depan Museum Satria Mandala",
+      "address": "Jl. Jend. Gatot Subroto, depan Museum Satria Mandala",
       "catalogSource": "jakarta-public",
       "coordinates": { "lat": -6.230952018492666, "lng": 106.81987550420907, "source": "manual" },
       "searchText": "705052 gatot subroto depan museum satria mandala setiabudi bali tower cctv 2 cctv 3 cctv 4 kuningan barat 003",
@@ -1940,8 +1940,8 @@
           "coordinates": { "lat": -6.230952018492666, "lng": 106.81987550420907, "source": "manual" }, "roadName": "Jl. Gatot Subroto"
         }
       ],
-      "sourceName": "Gatot Subroto Depan Museum Satria Mandala",
-      "roadName": "Jl. Gatot Subroto"
+      "sourceName": "Jl. Jend. Gatot Subroto - Depan Museum Satria Mandala",
+      "roadName": "Jl. Jend. Gatot Subroto"
     },
     {
       "id": "700470",
